@@ -4,46 +4,79 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    /* Base moderne avec un bleu océan */
+    --background: 200 100% 99%;
+    --foreground: 200 50% 10%;
+
+    /* Couleur principale : Bleu vif */
+    --primary: 200 100% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Accent : Turquoise énergique */
+    --accent: 170 100% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Tons neutres élégants */
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --card-foreground: 200 50% 10%;
+
+    /* Couleurs de support */
+    --secondary: 200 30% 96%;
+    --secondary-foreground: 200 50% 10%;
+
+    --muted: 200 20% 96%;
+    --muted-foreground: 200 30% 40%;
+
+    /* Alertes et actions */
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Bordures et inputs */
+    --border: 200 30% 90%;
+    --input: 200 30% 90%;
+    --ring: 200 100% 45%;
+
+    /* Progress spécifique */
+    --progress-background: 200 30% 96%;
+    --progress-foreground: 170 100% 45%;
   }
 
   .dark:root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    /* Base sombre sophistiquée */
+    --background: 200 50% 5%;
+    --foreground: 200 20% 98%;
+
+    /* Couleurs principales plus lumineuses */
+    --primary: 200 100% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Accent ajusté pour le mode sombre */
+    --accent: 170 100% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    /* Cartes et conteneurs */
+    --card: 200 50% 7%;
+    --card-foreground: 200 20% 98%;
+
+    /* Tons secondaires */
+    --secondary: 200 30% 12%;
+    --secondary-foreground: 200 20% 98%;
+
+    /* Éléments atténués */
+    --muted: 200 30% 12%;
+    --muted-foreground: 200 20% 65%;
+
+    /* Alertes ajustées */
+    --destructive: 0 100% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Bordures et inputs */
+    --border: 200 30% 15%;
+    --input: 200 30% 15%;
+    --ring: 200 100% 60%;
+
+    /* Progress en mode sombre */
+    --progress-background: 200 30% 12%;
+    --progress-foreground: 170 100% 50%;
   }
 }

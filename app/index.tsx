@@ -1,119 +1,79 @@
-import * as React from "react";
 import { View } from "react-native";
-import Animated, {
-  FadeInUp,
-  FadeOutDown,
-  LayoutAnimationConfig,
-} from "react-native-reanimated";
-import { Info } from "~/lib/icons/Info";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Card, CardContent, CardFooter } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Progress } from "~/components/ui/progress";
 import { Text } from "~/components/ui/text";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "~/components/ui/tooltip";
 import { router } from "expo-router";
+import Animated, { FadeInDown } from "react-native-reanimated";
 
-const GITHUB_AVATAR_URI =
-  "https://i.pinimg.com/originals/ef/a2/8d/efa28d18a04e7fa40ed49eeb0ab660db.jpg";
-
-export default function Screen() {
-  const [progress, setProgress] = React.useState(78);
-
-  function updateProgressValue() {
-    setProgress(Math.floor(Math.random() * 100));
-  }
+export default function LandingScreen() {
   return (
-    <View className="flex-1 justify-center items-center gap-5 p-6 bg-secondary/30">
-      <Card className="w-full max-w-sm p-6 rounded-2xl">
-        <CardHeader className="items-center">
-          <Avatar alt="Rick Sanchez's Avatar" className="w-24 h-24">
-            <AvatarImage source={{ uri: GITHUB_AVATAR_URI }} />
-            <AvatarFallback>
-              <Text>RS</Text>
-            </AvatarFallback>
-          </Avatar>
-          <View className="p-3" />
-          <CardTitle className="pb-2 text-center">Rick Sanchez</CardTitle>
-          <View className="flex-row">
-            <CardDescription className="text-base font-semibold">
-              Scientist
-            </CardDescription>
-            <Tooltip delayDuration={150}>
-              <TooltipTrigger className="px-2 pb-0.5 active:opacity-50">
-                <Info
-                  size={14}
-                  strokeWidth={2.5}
-                  className="w-4 h-4 text-foreground/70"
-                />
-              </TooltipTrigger>
-              <TooltipContent className="py-2 px-4 shadow">
-                <Text className="native:text-lg">Freelance</Text>
-              </TooltipContent>
-            </Tooltip>
-          </View>
-        </CardHeader>
-        <CardContent>
-          <View className="flex-row justify-around gap-3">
-            <View className="items-center">
-              <Text className="text-sm text-muted-foreground">Dimension</Text>
-              <Text className="text-xl font-semibold">C-137</Text>
-            </View>
-            <View className="items-center">
-              <Text className="text-sm text-muted-foreground">Age</Text>
-              <Text className="text-xl font-semibold">70</Text>
-            </View>
-            <View className="items-center">
-              <Text className="text-sm text-muted-foreground">Species</Text>
-              <Text className="text-xl font-semibold">Human</Text>
-            </View>
-          </View>
-        </CardContent>
-        <CardFooter className="flex-col gap-3 pb-0">
-          <View className="flex-row items-center overflow-hidden">
-            <Text className="text-sm text-muted-foreground">Productivity:</Text>
-            <LayoutAnimationConfig skipEntering>
-              <Animated.View
-                key={progress}
-                entering={FadeInUp}
-                exiting={FadeOutDown}
-                className="w-11 items-center"
-              >
-                <Text className="text-sm font-bold text-sky-600">
-                  {progress}%
+    <View className="flex-1 bg-gradient-to-b from-primary/20 to-primary/5">
+      <View className="flex-1 justify-between p-6">
+        {/* Main Content */}
+        <Animated.View
+          entering={FadeInDown.delay(400)}
+          className="flex-1 justify-center"
+        >
+          <Card className="bg-card/90 rounded-3xl">
+            <CardContent className="p-6 gap-4">
+              <View className="gap-2">
+                <Text className="text-2xl font-bold text-center">
+                  Ready to Start?
                 </Text>
-              </Animated.View>
-            </LayoutAnimationConfig>
-          </View>
-          <Progress
-            value={progress}
-            className="h-2"
-            indicatorClassName="bg-sky-600"
-          />
-          <View />
-          <Button
-            variant="outline"
-            className="shadow shadow-foreground/5"
-            onPress={updateProgressValue}
-          >
-            <Text>Update</Text>
-          </Button>
-          <Button onPress={() => router.push("/sign-up")}>
-            <Text>Sign Up</Text>
-          </Button>
-        </CardFooter>
-      </Card>
+                <Text className="text-base text-center text-muted-foreground">
+                  Practice for your Belgian driving test with our comprehensive
+                  question bank
+                </Text>
+              </View>
+
+              <View className="flex-row justify-center gap-4 py-4">
+                <View className="items-center">
+                  <Text className="text-3xl font-bold text-primary">1000+</Text>
+                  <Text className="text-sm text-muted-foreground">
+                    Questions
+                  </Text>
+                </View>
+                <View className="items-center">
+                  <Text className="text-3xl font-bold text-primary">50+</Text>
+                  <Text className="text-sm text-muted-foreground">Themes</Text>
+                </View>
+                <View className="items-center">
+                  <Text className="text-3xl font-bold text-primary">24/7</Text>
+                  <Text className="text-sm text-muted-foreground">Access</Text>
+                </View>
+              </View>
+            </CardContent>
+
+            <CardFooter className="flex-col gap-3 p-6 pt-0">
+              <Button
+                className="w-full h-12"
+                onPress={() => router.push("/sign-up")}
+              >
+                <Text className="text-primary-foreground text-lg">
+                  Get Started
+                </Text>
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full h-12"
+                onPress={() => router.push("/sign-in")}
+              >
+                <Text className="text-lg">I already have an account</Text>
+              </Button>
+            </CardFooter>
+          </Card>
+        </Animated.View>
+
+        {/* Footer */}
+        <Animated.View
+          entering={FadeInDown.delay(600)}
+          className="items-center pb-6"
+        >
+          <Text className="text-muted-foreground text-sm">
+            © 2025 Belgium Drive. All rights reserved.
+          </Text>
+        </Animated.View>
+      </View>
     </View>
   );
 }

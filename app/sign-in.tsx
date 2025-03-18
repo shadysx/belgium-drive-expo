@@ -12,18 +12,27 @@ import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
 
-const SignUp = () => {
+const SignIn = () => {
   const [email, setEmail] = useState("test@mail.com");
-  const [name, setName] = useState("Laurent");
   const [password, setPassword] = useState("password");
 
-  const handleSignUp = async () => {
+  const handleSignIn = async () => {
     try {
-      await authClient.signUp.email({
-        email,
-        password,
-        name,
-      });
+      console.log("signing in");
+      const session = await authClient.signIn.email(
+        {
+          email,
+          password,
+        },
+        {
+          onSuccess: () => {
+            console.log("success", session);
+          },
+          onError: (error) => {
+            console.error(error);
+          },
+        }
+      );
     } catch (error) {
       console.error(error);
     }
@@ -33,23 +42,13 @@ const SignUp = () => {
     <View className="flex-1 justify-center items-center p-6 bg-secondary/30">
       <Card className="w-full max-w-sm p-6 rounded-2xl">
         <CardHeader>
-          <Text className="text-2xl font-bold text-center">Create Account</Text>
+          <Text className="text-2xl font-bold text-center">Welcome Back</Text>
           <Text className="text-muted-foreground text-center">
-            Sign up to get started
+            Sign in to your account
           </Text>
         </CardHeader>
 
         <CardContent className="gap-4">
-          <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Name</Text>
-            <Input
-              value={name}
-              onChangeText={setName}
-              className="bg-background"
-              placeholder="Enter your name"
-            />
-          </View>
-
           <View className="gap-2">
             <Text className="text-sm text-muted-foreground">Email</Text>
             <Input
@@ -68,22 +67,22 @@ const SignUp = () => {
               value={password}
               onChangeText={setPassword}
               className="bg-background"
-              placeholder="Choose a password"
+              placeholder="Enter your password"
               secureTextEntry
             />
           </View>
         </CardContent>
 
         <CardFooter className="flex-col gap-4">
-          <Button className="w-full" onPress={handleSignUp}>
-            <Text className="text-primary-foreground">Sign Up</Text>
+          <Button className="w-full" onPress={handleSignIn}>
+            <Text className="text-primary-foreground">Sign In</Text>
           </Button>
 
           <Text
             className="text-sm text-muted-foreground text-center active:opacity-70"
-            onPress={() => router.replace("/sign-in")}
+            onPress={() => router.replace("/sign-up")}
           >
-            Already have an account? Sign in
+            Don't have an account? Sign up
           </Text>
         </CardFooter>
       </Card>
@@ -91,4 +90,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default SignIn;

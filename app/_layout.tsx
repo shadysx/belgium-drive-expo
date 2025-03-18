@@ -1,15 +1,23 @@
-import '~/global.css';
+import "~/global.css";
 
-import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import * as React from 'react';
-import { Platform } from 'react-native';
-import { NAV_THEME } from '~/lib/constants';
-import { useColorScheme } from '~/lib/useColorScheme';
-import { PortalHost } from '@rn-primitives/portal';
-import { ThemeToggle } from '~/components/ThemeToggle';
-import { setAndroidNavigationBar } from '~/lib/android-navigation-bar';
+import {
+  DarkTheme,
+  DefaultTheme,
+  Theme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { router, Stack, useSegments } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import * as React from "react";
+import { Platform } from "react-native";
+import { NAV_THEME } from "~/lib/constants";
+import { useColorScheme } from "~/lib/useColorScheme";
+import { PortalHost } from "@rn-primitives/portal";
+import { ThemeToggle } from "~/components/ThemeToggle";
+import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
+import { authClient } from "~/lib/auth-client";
+import { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -23,21 +31,40 @@ const DARK_THEME: Theme = {
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
-} from 'expo-router';
+} from "expo-router";
+
+const publicRoutes = ["/", "sign-in", "sign-up"];
+const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
+  const { data: session, isPending } = authClient.useSession();
+  const segments = useSegments();
+
+  useEffect(() => {
+    if (isPending) return;
+    const segment = segments[0] || "/";
+    const isPublicRoute = publicRoutes.includes(segment);
+
+    if (session && isPublicRoute) {
+      router.replace("/home");
+    }
+    if (!session && !isPublicRoute) {
+      router.replace("/sign-in");
+    }
+  }, [session, isPending, segments]);
+
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
       return;
     }
 
-    if (Platform.OS === 'web') {
+    if (Platform.OS === "web") {
       // Adds the background color to the html element to prevent white background on overscroll.
-      document.documentElement.classList.add('bg-background');
+      document.documentElement.classList.add("bg-background");
     }
     setAndroidNavigationBar(colorScheme);
     setIsColorSchemeLoaded(true);
@@ -50,20 +77,27 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
-      <Stack>
-        <Stack.Screen
-          name='index'
-          options={{
-            title: 'Starter Base',
-            headerRight: () => <ThemeToggle />,
-          }}
-        />
-      </Stack>
+      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+      <QueryClientProvider client={queryClient}>
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              title: "Belgium Drive",
+              headerRight: () => <ThemeToggle />,
+            }}
+          />
+          <Stack.Screen name="home" options={{ headerShown: false }} />
+          <Stack.Screen name="quiz" options={{ headerShown: false }} />
+          <Stack.Screen name="results" options={{ headerShown: false }} />
+        </Stack>
+      </QueryClientProvider>
       <PortalHost />
     </ThemeProvider>
   );
 }
 
 const useIsomorphicLayoutEffect =
-  Platform.OS === 'web' && typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+  Platform.OS === "web" && typeof window === "undefined"
+    ? React.useEffect
+    : React.useLayoutEffect;
