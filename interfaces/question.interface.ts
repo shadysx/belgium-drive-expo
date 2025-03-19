@@ -2,12 +2,12 @@ export interface Question {
   id: string;
   title: string;
   text: string;
-  imageUri?: string;
+  imageUrl: string;
   answers: string[];
   answerIndex: number;
   category: string;
-  explanation?: string;
-  creationDate: string;
+  explanation: string;
+  createdAt: string;
   isSerious: boolean;
-  thumbnailUri?: string;
+  thumbnailUrl: string;
 }

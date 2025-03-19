@@ -1,6 +1,5 @@
-import { Question } from "~/models/question";
 import humps from "humps";
-
+import { Question } from "~/interfaces/question.interface";
 const API_URL = "http://localhost:3000/api";
 
 export async function fetchQuestions(): Promise<Question[]> {

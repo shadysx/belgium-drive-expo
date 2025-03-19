@@ -1,9 +1,4 @@
-import {
-  View,
-  ScrollView,
-  SafeAreaView,
-  ActivityIndicator,
-} from "react-native";
+import { View, SafeAreaView, ActivityIndicator } from "react-native";
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useState, useMemo, useEffect } from "react";
@@ -13,76 +8,85 @@ import { Image } from "react-native";
 import { router } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import QuizButtons from "~/components/quiz/QuizButtons";
-import { Question } from "~/models/question";
-import { Button } from "~/components/ui/button";
+import { Question } from "~/interfaces/question.interface";
 import QuizHeader from "~/components/quiz/QuizHeader";
+import { QuizType } from "~/enums/quiz-type.enum";
+import { SERVER_BASE_URL } from "~/lib/constants";
+import { QuizSubmission } from "~/interfaces/dto/quiz-submission.interface";
+import { QuizSubmissionElement } from "~/interfaces/dto/quiz-submission-element.interface";
+import { useSubmitQuiz } from "~/hooks/useSubmitQuiz";
+import { useQuestions } from "~/hooks/useQuestions";
+
+const initialTimeLeft = 3;
 
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
     null
   );
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(15);
+  const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
+  const [quizSubmissionElements, setQuizSubmissionElements] = useState<
+    QuizSubmissionElement[]
+  >([]);
 
-  const {
-    data: questions,
-    error,
-    isError,
-    isLoading,
-  } = useQuery({
-    queryKey: ["questions"],
-    queryFn: fetchQuestions,
-  });
+  const { data: questions, error, isError, isLoading } = useQuestions();
 
   const shuffledQuestions = useMemo(
     () => questions?.sort(() => Math.random() - 0.5).slice(0, 40),
     [questions]
   );
 
+  const submitQuizMutation = useSubmitQuiz();
+
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          if (currentQuestionIndex < 39) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
-            setSelectedAnswerIndex(null);
-            return 15;
-          } else {
-            setCurrentQuestionIndex(0);
-            router.push({
-              pathname: "/results",
-              params: { score: score.toString() },
-            });
-          }
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
   }, [currentQuestionIndex]);
 
   useEffect(() => {
-    setTimeLeft(15);
-  }, [currentQuestionIndex]);
-
-  const currentQuestion: Question | undefined =
-    shuffledQuestions?.[currentQuestionIndex];
-
-  const handleAnswer = () => {
-    if (selectedAnswerIndex === currentQuestion?.answerIndex) {
-      setScore(score + 1);
+    if (timeLeft <= 0) {
+      handleAnswer();
     }
-    if (currentQuestionIndex < 39) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswerIndex(null);
-    } else {
-      router.replace({
-        pathname: "/results",
-        params: { score: score },
-      });
+  }, [timeLeft]);
+
+  // TODO: To this server side
+  const currentQuestion: Question | undefined = useMemo(() => {
+    return shuffledQuestions?.[currentQuestionIndex];
+  }, [shuffledQuestions, currentQuestionIndex]);
+
+  const handleAnswer = async () => {
+    try {
+      if (!currentQuestion) return;
+
+      const quizSubmissionElement: QuizSubmissionElement = {
+        questionId: currentQuestion.id,
+        userAnswerIndex: selectedAnswerIndex,
+      };
+
+      setQuizSubmissionElements((prev) => [...prev, quizSubmissionElement]);
+
+      if (currentQuestionIndex < 39) {
+        setCurrentQuestionIndex((prev) => prev + 1);
+        setSelectedAnswerIndex(null);
+        setTimeLeft(initialTimeLeft);
+      } else {
+        const quizSubmission: QuizSubmission = {
+          quizSubmissionElements: quizSubmissionElements,
+          type: QuizType.SIMULATION,
+        };
+        const result = await submitQuizMutation.mutateAsync(quizSubmission);
+        router.replace({
+          pathname: "/results",
+          params: {
+            score: result.score,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
     }
   };
 
@@ -111,17 +115,16 @@ export default function QuizScreen() {
           <View className="my-4">
             <QuizHeader
               timeLeft={timeLeft}
-              score={score}
               currentQuestionIndex={currentQuestionIndex}
             />
           </View>
 
           <Animated.View entering={FadeInDown.delay(200)} className="flex-1">
             <Card className="overflow-hidden">
-              {currentQuestion?.imageUri && (
+              {currentQuestion?.imageUrl && (
                 <View className="w-full aspect-[1.4]">
                   <Image
-                    source={{ uri: currentQuestion.imageUri }}
+                    source={{ uri: currentQuestion.imageUrl }}
                     className="w-full h-full"
                     resizeMode="cover"
                   />
@@ -145,6 +148,13 @@ export default function QuizScreen() {
           </Animated.View>
         </View>
       </View>
+
+      {submitQuizMutation.isPending && (
+        <View className="absolute inset-0 bg-black/50 items-center justify-center">
+          <ActivityIndicator size="large" color="#fff" />
+          <Text className="text-white mt-4">Soumission en cours...</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }

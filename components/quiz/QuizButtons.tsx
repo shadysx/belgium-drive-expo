@@ -2,9 +2,8 @@ import { useState } from "react";
 import { View, Animated } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { Question } from "~/models/question";
 import AnswerButton from "./AnswerButton";
-
+import { Question } from "~/interfaces/question.interface";
 interface QuizButtonsProps {
   currentQuestion: Question;
   selectedAnswerIndex: number | null;

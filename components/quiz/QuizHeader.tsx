@@ -13,15 +13,10 @@ import Animated, {
 
 interface QuizHeaderProps {
   timeLeft: number;
-  score: number;
   currentQuestionIndex: number;
 }
 
-const QuizHeader = ({
-  timeLeft,
-  score,
-  currentQuestionIndex,
-}: QuizHeaderProps) => {
+const QuizHeader = ({ timeLeft, currentQuestionIndex }: QuizHeaderProps) => {
   const breathingStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -73,8 +68,6 @@ const QuizHeader = ({
                 {timeLeft}s
               </Text>
             </View>
-
-            <Text className="text-lg font-bold">Score: {score}</Text>
           </View>
 
           <View className="h-10 relative">
