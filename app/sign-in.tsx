@@ -18,19 +18,14 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     try {
-      console.log("signing in");
       const session = await authClient.signIn.email(
         {
           email,
           password,
         },
         {
-          onSuccess: () => {
-            console.log("success", session);
-          },
-          onError: (error) => {
-            console.error(error);
-          },
+          onSuccess: () => {},
+          onError: (error) => {},
         }
       );
     } catch (error) {

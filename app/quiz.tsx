@@ -2,20 +2,19 @@ import { View, SafeAreaView, ActivityIndicator } from "react-native";
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useState, useMemo, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchQuestions } from "~/lib/api";
 import { Image } from "react-native";
 import { router } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import QuizButtons from "~/components/quiz/QuizButtons";
-import { Question } from "~/interfaces/question.interface";
+import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 import QuizHeader from "~/components/quiz/QuizHeader";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { SERVER_BASE_URL } from "~/lib/constants";
 import { QuizSubmission } from "~/interfaces/dto/quiz-submission.interface";
 import { QuizSubmissionElement } from "~/interfaces/dto/quiz-submission-element.interface";
-import { useSubmitQuiz } from "~/hooks/useSubmitQuiz";
-import { useQuestions } from "~/hooks/useQuestions";
+import { useSubmitQuiz } from "~/hooks/useQuery/useSubmitQuiz";
+import { useGetQuestions } from "~/hooks/useQuery/useQuestions";
+import { useQuizTimer } from "~/hooks/useQuizTimer";
 
 const initialTimeLeft = 3;
 
@@ -24,12 +23,11 @@ export default function QuizScreen() {
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
     null
   );
-  const [timeLeft, setTimeLeft] = useState(initialTimeLeft);
   const [quizSubmissionElements, setQuizSubmissionElements] = useState<
     QuizSubmissionElement[]
   >([]);
 
-  const { data: questions, error, isError, isLoading } = useQuestions();
+  const { data: questions, error, isError, isLoading } = useGetQuestions();
 
   const shuffledQuestions = useMemo(
     () => questions?.sort(() => Math.random() - 0.5).slice(0, 40),
@@ -37,23 +35,12 @@ export default function QuizScreen() {
   );
 
   const submitQuizMutation = useSubmitQuiz();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [currentQuestionIndex]);
-
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      handleAnswer();
-    }
-  }, [timeLeft]);
+  const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () => {
+    handleAnswer();
+  });
 
   // TODO: To this server side
-  const currentQuestion: Question | undefined = useMemo(() => {
+  const currentQuestion: QuizQuestion | undefined = useMemo(() => {
     return shuffledQuestions?.[currentQuestionIndex];
   }, [shuffledQuestions, currentQuestionIndex]);
 
@@ -71,7 +58,7 @@ export default function QuizScreen() {
       if (currentQuestionIndex < 39) {
         setCurrentQuestionIndex((prev) => prev + 1);
         setSelectedAnswerIndex(null);
-        setTimeLeft(initialTimeLeft);
+        resetTimer();
       } else {
         const quizSubmission: QuizSubmission = {
           quizSubmissionElements: quizSubmissionElements,
@@ -81,7 +68,7 @@ export default function QuizScreen() {
         router.replace({
           pathname: "/results",
           params: {
-            score: result.score,
+            quizResult: JSON.stringify(result),
           },
         });
       }

@@ -3,9 +3,9 @@ import { View, Animated } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import AnswerButton from "./AnswerButton";
-import { Question } from "~/interfaces/question.interface";
+import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 interface QuizButtonsProps {
-  currentQuestion: Question;
+  currentQuestion: QuizQuestion;
   selectedAnswerIndex: number | null;
   setSelectedAnswerIndex: (index: number | null) => void;
   onSubmit: (index: number | null) => void;
@@ -23,7 +23,7 @@ const QuizButtons = ({
 
   return (
     <View className="flex-1 flex-col gap-3">
-      {currentQuestion?.answers.map((answer, index) => (
+      {currentQuestion?.answers?.map((answer, index) => (
         <AnswerButton
           key={index}
           index={index}

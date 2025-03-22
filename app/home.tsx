@@ -13,14 +13,14 @@ import {
   Timer,
   History,
   LogOut,
+  Check,
 } from "lucide-react-native";
-import { useQuery } from "@tanstack/react-query";
-import { fetchQuestions } from "~/lib/api";
 import { router } from "expo-router";
+import { useGetStats } from "~/hooks/useQuery/useStats";
 
 export default function HomeScreen() {
   const { data: session } = authClient.useSession();
-
+  const { data: stats } = useGetStats();
   const handleSignOut = async () => {
     await authClient.signOut();
     router.replace("/");
@@ -84,10 +84,12 @@ export default function HomeScreen() {
           >
             <Card className="flex-1" onTouchStart={() => router.push("/test")}>
               <CardContent className="p-4">
-                <Trophy size={20} className="text-yellow-500" />
-                <Text className="text-2xl font-bold mt-2">85%</Text>
+                <Check size={20} className="text-yellow-500" />
+                <Text className="text-2xl font-bold mt-2">
+                  {stats?.successQuizElementRatio?.toFixed(2) ?? "100.00"}%
+                </Text>
                 <Text className="text-muted-foreground text-sm">
-                  Taux de réussite
+                  Taux de bonnes réponses
                 </Text>
               </CardContent>
             </Card>
@@ -95,7 +97,9 @@ export default function HomeScreen() {
             <Card className="flex-1">
               <CardContent className="p-4">
                 <Brain size={20} className="text-purple-500" />
-                <Text className="text-2xl font-bold mt-2">247</Text>
+                <Text className="text-2xl font-bold mt-2">
+                  {stats?.totalQuestionsAnswered ?? 0}
+                </Text>
                 <Text className="text-muted-foreground text-sm">
                   Questions répondues
                 </Text>
