@@ -3,7 +3,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { useState, useMemo, useEffect } from "react";
 import { Image } from "react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import QuizButtons from "~/components/quiz/QuizButtons";
 import { QuizQuestion } from "~/interfaces/quiz-question.interface";
@@ -15,6 +15,9 @@ import { QuizSubmissionElement } from "~/interfaces/dto/quiz-submission-element.
 import { useSubmitQuiz } from "~/hooks/useQuery/useSubmitQuiz";
 import { useGetQuestions } from "~/hooks/useQuery/useQuestions";
 import { useQuizTimer } from "~/hooks/useQuizTimer";
+import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
+import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
+import { shuffleAnswers } from "~/lib/utils";
 
 const initialTimeLeft = 3;
 
@@ -27,48 +30,83 @@ export default function QuizScreen() {
     QuizSubmissionElement[]
   >([]);
 
-  const { data: questions, error, isError, isLoading } = useGetQuestions();
+  const { quizRequest, quizType } = useLocalSearchParams<{
+    quizRequest: string;
+    quizType: string;
+    theme: string;
+  }>();
+
+  const quizRequestParsed: QuizRequest = JSON.parse(quizRequest);
+  const quizTypeParsed: QuizType = JSON.parse(quizType);
+
+  const {
+    data: questions,
+    error,
+    isError,
+    isLoading,
+  } = useGetQuiz(quizRequestParsed);
 
   const shuffledQuestions = useMemo(
-    () => questions?.sort(() => Math.random() - 0.5).slice(0, 40),
+    () => questions?.sort(() => Math.random() - 0.5),
     [questions]
   );
+
+  const processedQuestions = useMemo(
+    () =>
+      shuffledQuestions?.map((question) => {
+        const shuffledQuestion = shuffleAnswers(question);
+        return shuffledQuestion;
+      }),
+    [shuffledQuestions]
+  );
+
+  const questionsLength = questions?.length ?? 0;
 
   const submitQuizMutation = useSubmitQuiz();
   const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () => {
     handleAnswer();
   });
 
-  // TODO: To this server side
-  const currentQuestion: QuizQuestion | undefined = useMemo(() => {
-    return shuffledQuestions?.[currentQuestionIndex];
-  }, [shuffledQuestions, currentQuestionIndex]);
+  const currentQuestion = useMemo(() => {
+    return processedQuestions?.[currentQuestionIndex];
+  }, [processedQuestions, currentQuestionIndex]);
 
   const handleAnswer = async () => {
     try {
       if (!currentQuestion) return;
 
+      let originalIndex = null;
+
+      if (selectedAnswerIndex !== null) {
+        originalIndex = currentQuestion.originalIndexMap[selectedAnswerIndex];
+      }
+
       const quizSubmissionElement: QuizSubmissionElement = {
         questionId: currentQuestion.id,
-        userAnswerIndex: selectedAnswerIndex,
+        userAnswerIndex: originalIndex,
+      };
+
+      const quizSubmission: QuizSubmission = {
+        quizSubmissionElements: [
+          ...quizSubmissionElements,
+          quizSubmissionElement,
+        ],
+        type: quizTypeParsed,
       };
 
       setQuizSubmissionElements((prev) => [...prev, quizSubmissionElement]);
 
-      if (currentQuestionIndex < 39) {
+      if (currentQuestionIndex < questionsLength - 1) {
         setCurrentQuestionIndex((prev) => prev + 1);
         setSelectedAnswerIndex(null);
         resetTimer();
       } else {
-        const quizSubmission: QuizSubmission = {
-          quizSubmissionElements: quizSubmissionElements,
-          type: QuizType.SIMULATION,
-        };
         const result = await submitQuizMutation.mutateAsync(quizSubmission);
         router.replace({
           pathname: "/results",
           params: {
             quizResult: JSON.stringify(result),
+            quizLength: JSON.stringify(questionsLength),
           },
         });
       }
@@ -103,6 +141,7 @@ export default function QuizScreen() {
             <QuizHeader
               timeLeft={timeLeft}
               currentQuestionIndex={currentQuestionIndex}
+              questionsLength={questionsLength}
             />
           </View>
 

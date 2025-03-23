@@ -14,9 +14,14 @@ import Animated, {
 interface QuizHeaderProps {
   timeLeft: number;
   currentQuestionIndex: number;
+  questionsLength: number;
 }
 
-const QuizHeader = ({ timeLeft, currentQuestionIndex }: QuizHeaderProps) => {
+const QuizHeader = ({
+  timeLeft,
+  currentQuestionIndex,
+  questionsLength,
+}: QuizHeaderProps) => {
   const breathingStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -72,13 +77,13 @@ const QuizHeader = ({ timeLeft, currentQuestionIndex }: QuizHeaderProps) => {
 
           <View className="h-10 relative">
             <Progress
-              value={(currentQuestionIndex + 1) * 2.5}
+              value={(currentQuestionIndex + 1) * (100 / questionsLength)}
               className="absolute inset-0 h-full rounded-full border border-primary/20"
               indicatorClassName="bg-primary"
             />
             <View className="absolute inset-0 justify-center items-center">
               <Text className="text-sm font-bold">
-                Question {currentQuestionIndex + 1} sur 40
+                Question {currentQuestionIndex + 1} sur {questionsLength ?? 0}
               </Text>
             </View>
           </View>
