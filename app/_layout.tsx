@@ -89,11 +89,21 @@ export default function RootLayout() {
           />
           <Stack.Screen name="home" options={{ headerShown: false }} />
           <Stack.Screen name="quiz" options={{ headerShown: false }} />
-          <Stack.Screen name="results" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="results"
+            options={{ headerShown: false, title: "Résultats" }}
+          />
           <Stack.Screen
             name="custom-quiz-settings"
             options={{
               headerShown: false,
+            }}
+          />
+          <Stack.Screen name="history" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="quiz-viewer"
+            options={{
+              title: "Détail de la question",
             }}
           />
         </Stack>

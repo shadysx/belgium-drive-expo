@@ -61,7 +61,22 @@ export default function ResultsScreen() {
             <View className="w-full mt-4">
               <Text className="font-semibold mb-2">Question Details:</Text>
               {result.quizResultElements.reverse().map((element, index) => (
-                <Card key={element.id} className="mb-2">
+                <Card
+                  key={element.id}
+                  className="mb-2"
+                  onTouchStart={() => {
+                    console.log(
+                      "Question image before parsing:",
+                      element.question.imageUrl
+                    );
+                    router.push({
+                      pathname: "/quiz-viewer",
+                      params: {
+                        quizResultElement: JSON.stringify(element),
+                      },
+                    });
+                  }}
+                >
                   <CardContent className="p-4">
                     <Text className="font-medium">Question {index + 1}</Text>
                     <Text className="text-sm text-muted-foreground">

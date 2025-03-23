@@ -34,3 +34,7 @@ export const shuffleAnswers = (question: QuizQuestion) => {
     originalIndexMap,
   };
 };
+
+export const cleanUrl = (url: string) => {
+  return url.replace(/\/images\//, "/images%2F");
+};

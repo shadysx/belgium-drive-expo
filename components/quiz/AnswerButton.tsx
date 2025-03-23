@@ -6,19 +6,26 @@ interface AnswerButtonProps {
   index: number;
   text: string;
   isSelected: boolean;
-  setSelectedAnswer: (index: number) => void;
+  setSelectedAnswerIndex?: (index: number) => void;
+  isReadOnly?: boolean;
 }
 
 const AnswerButton = ({
   index,
   text,
   isSelected,
-  setSelectedAnswer,
+  setSelectedAnswerIndex,
+  isReadOnly,
 }: AnswerButtonProps) => {
+  // Correct answer is always the first answer in read mode
+  const isGreen = isReadOnly && index === 0;
+  const isRed = isReadOnly && isSelected && index !== 0;
   return (
     <View className="px-1 flex-1">
       <Button
-        onPress={() => setSelectedAnswer(index)}
+        onPress={() => {
+          setSelectedAnswerIndex?.(index);
+        }}
         className={`
           justify-center flex-1
           ${
@@ -26,12 +33,13 @@ const AnswerButton = ({
               ? "bg-primary border-primary text-white"
               : "bg-primary/5 border-primary/20"
           }
+          ${isGreen ? "bg-green-500" : isRed ? "bg-red-500" : ""}
         `}
       >
         <Text
           className={`
             text-base font-medium text-center
-            ${isSelected ? "text-white" : "text-primary"}
+            ${isSelected || isGreen || isRed ? "text-white" : "text-primary"}
           `}
         >
           {text}

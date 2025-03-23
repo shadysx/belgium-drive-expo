@@ -1,6 +1,6 @@
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { authClient } from "~/lib/auth-client";
@@ -16,11 +16,11 @@ import {
   Check,
   Target,
 } from "lucide-react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useGetStats } from "~/hooks/useQuery/useStats";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetThemesWithQuestions } from "~/hooks/useQuery/useThemes";
-import { Theme, ThemeWithQuestions } from "~/interfaces/theme.interface";
+import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
 
 export default function HomeScreen() {
@@ -58,8 +58,38 @@ export default function HomeScreen() {
 
         {/* Quick Actions */}
         <View className="p-6 gap-4">
+          {/* Statistics */}
           <Animated.View
             entering={FadeInDown.delay(300)}
+            className="flex-row gap-4"
+          >
+            <Card className="flex-1">
+              <CardContent className="p-4">
+                <Check size={20} className="text-primary" />
+                <Text className="text-2xl font-bold mt-2">
+                  {stats?.successQuizElementRatio?.toFixed(2) ?? "100.00"}%
+                </Text>
+                <Text className="text-muted-foreground text-sm">
+                  Taux de bonnes réponses
+                </Text>
+              </CardContent>
+            </Card>
+
+            <Card className="flex-1">
+              <CardContent className="p-4">
+                <Brain size={20} className="text-purple-500" />
+                <Text className="text-2xl font-bold mt-2">
+                  {stats?.totalQuestionsAnswered ?? 0}
+                </Text>
+                <Text className="text-muted-foreground text-sm">
+                  Questions répondues
+                </Text>
+              </CardContent>
+            </Card>
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(350)}
             className="flex-row gap-4"
           >
             <Card
@@ -107,38 +137,37 @@ export default function HomeScreen() {
             </Card>
           </Animated.View>
 
-          {/* Statistics */}
           <Animated.View
             entering={FadeInDown.delay(400)}
             className="flex-row gap-4"
           >
-            <Card className="flex-1" onTouchStart={() => router.push("/test")}>
-              <CardContent className="p-4">
-                <Check size={20} className="text-primary" />
-                <Text className="text-2xl font-bold mt-2">
-                  {stats?.successQuizElementRatio?.toFixed(2) ?? "100.00"}%
-                </Text>
-                <Text className="text-muted-foreground text-sm">
-                  Taux de bonnes réponses
+            <Card
+              className="flex-1 bg-muted"
+              onTouchStart={() => router.push("/history")}
+            >
+              <CardContent className="p-4 items-center">
+                <History size={24} className="text-muted-foreground" />
+                <Text className="text-muted-foreground mt-2 font-medium">
+                  Historique
                 </Text>
               </CardContent>
             </Card>
 
-            <Card className="flex-1">
-              <CardContent className="p-4">
-                <Brain size={20} className="text-purple-500" />
-                <Text className="text-2xl font-bold mt-2">
-                  {stats?.totalQuestionsAnswered ?? 0}
-                </Text>
-                <Text className="text-muted-foreground text-sm">
-                  Questions répondues
+            <Card
+              className="flex-1 bg-muted"
+              // onTouchStart={() => router.push("/stats")}
+            >
+              <CardContent className="p-4 items-center">
+                <Trophy size={24} className="text-muted-foreground" />
+                <Text className="text-muted-foreground mt-2 font-medium">
+                  Statistiques
                 </Text>
               </CardContent>
             </Card>
           </Animated.View>
 
           {/* Practice Sections */}
-          <Animated.View entering={FadeInDown.delay(500)}>
+          <Animated.View entering={FadeInDown.delay(450)}>
             <Text className="text-lg font-semibold mb-3">Catégories</Text>
 
             <View className="gap-3">

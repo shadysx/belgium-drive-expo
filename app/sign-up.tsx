@@ -24,9 +24,7 @@ const SignUp = () => {
         password,
         name,
       });
-    } catch (error) {
-      console.error(error);
-    }
+    } catch {}
   };
 
   return (

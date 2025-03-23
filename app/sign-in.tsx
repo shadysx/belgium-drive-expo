@@ -28,9 +28,7 @@ const SignIn = () => {
           onError: (error) => {},
         }
       );
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   };
 
   return (

@@ -18,6 +18,7 @@ import { useQuizTimer } from "~/hooks/useQuizTimer";
 import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
 import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
 import { shuffleAnswers } from "~/lib/utils";
+import QuizViewer from "~/components/quiz/QuizViewer";
 
 const initialTimeLeft = 3;
 
@@ -71,6 +72,8 @@ export default function QuizScreen() {
     return processedQuestions?.[currentQuestionIndex];
   }, [processedQuestions, currentQuestionIndex]);
 
+  console.log("Before parsing", currentQuestion?.imageUrl);
+
   const handleAnswer = async () => {
     try {
       if (!currentQuestion) return;
@@ -110,9 +113,7 @@ export default function QuizScreen() {
           },
         });
       }
-    } catch (error) {
-      console.error("Error submitting quiz:", error);
-    }
+    } catch (error) {}
   };
 
   if (isError) {
@@ -145,33 +146,14 @@ export default function QuizScreen() {
             />
           </View>
 
-          <Animated.View entering={FadeInDown.delay(200)} className="flex-1">
-            <Card className="overflow-hidden">
-              {currentQuestion?.imageUrl && (
-                <View className="w-full aspect-[1.4]">
-                  <Image
-                    source={{ uri: currentQuestion.imageUrl }}
-                    className="w-full h-full"
-                    resizeMode="cover"
-                  />
-                </View>
-              )}
-              <CardContent className="p-4">
-                <Text className="font-medium">{currentQuestion?.text}</Text>
-              </CardContent>
-            </Card>
-
-            <View className="mt-4 flex-1">
-              {currentQuestion && (
-                <QuizButtons
-                  currentQuestion={currentQuestion}
-                  selectedAnswerIndex={selectedAnswerIndex}
-                  setSelectedAnswerIndex={setSelectedAnswerIndex}
-                  onSubmit={handleAnswer}
-                />
-              )}
-            </View>
-          </Animated.View>
+          {currentQuestion && (
+            <QuizViewer
+              question={currentQuestion}
+              selectedAnswerIndex={selectedAnswerIndex}
+              setSelectedAnswerIndex={setSelectedAnswerIndex}
+              handleAnswer={handleAnswer}
+            />
+          )}
         </View>
       </View>
 
