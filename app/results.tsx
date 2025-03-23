@@ -1,10 +1,17 @@
-import { View, ScrollView, SafeAreaView } from "react-native";
+import { View, ScrollView, Image, Dimensions, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useLocalSearchParams, router } from "expo-router";
 import { QuizResult } from "~/interfaces/quiz-result.interface";
-import { QuizResultElement } from "~/interfaces/quiz-result-element.interface";
+import Animated, {
+  FadeInDown,
+  ZoomIn,
+  SlideInRight,
+} from "react-native-reanimated";
+import { CheckCircle2, XCircle, Clock, ArrowRight } from "lucide-react-native";
+import { formatFirebaseUrl, isPassed } from "~/lib/utils";
 
 export default function ResultsScreen() {
   const { quizResult, quizLength } = useLocalSearchParams<{
@@ -13,108 +20,197 @@ export default function ResultsScreen() {
   }>();
 
   const result: QuizResult = JSON.parse(quizResult);
-  const percentage = (Number(result.score) / Number(quizLength)) * 100;
-  const passed = percentage >= 80;
+  const passed = isPassed(result.score, result.quizResultElements.length);
 
-  const getAnswerStatus = (element: QuizResultElement) => {
-    if (element.userAnswerIndex === null) return "Unanswered";
-    return element.userAnswerIndex === element.question.answerIndex
-      ? "Correct"
-      : "Incorrect";
+  const stats = {
+    correct: result.quizResultElements.filter(
+      (e) => e.userAnswerIndex === e.question.answerIndex
+    ).length,
+    wrong: result.quizResultElements.filter(
+      (e) =>
+        e.userAnswerIndex !== null &&
+        e.userAnswerIndex !== e.question.answerIndex
+    ).length,
+    unanswered: result.quizResultElements.filter(
+      (e) => e.userAnswerIndex === null
+    ).length,
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background p-6">
-      <ScrollView className="flex-1 bg-background p-6">
-        <Card className="mb-6">
-          <CardContent className="p-6 items-center gap-6">
-            <Text className="text-2xl font-bold">
-              {passed ? "Congratulations! 🎉" : "Keep practicing! 💪"}
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <Animated.View
+          entering={FadeInDown.duration(500)}
+          className="px-6 pt-8"
+        >
+          <Text className="text-3xl font-bold mb-2">
+            {passed
+              ? "Réussi, félicitations ! 🎉"
+              : "Raté, continue tes efforts ! 💪"}
+          </Text>
+          <Text className="text-base text-muted-foreground mb-6">
+            Tu as répondu à {result.quizResultElements.length} questions
+          </Text>
+        </Animated.View>
+
+        <Animated.View
+          entering={ZoomIn.duration(800).delay(300)}
+          className="items-center mb-8"
+        >
+          <View
+            className={`
+            w-40 h-40 rounded-full items-center justify-center
+            ${passed ? "bg-green-500/10" : "bg-red-500/10"}
+          `}
+          >
+            <Text
+              className={`
+              text-4xl font-bold
+              ${passed ? "text-green-500" : "text-red-500"}
+            `}
+            >
+              {`${result.score} / ${quizLength}`}
             </Text>
+            <Text className="text-muted-foreground">Score</Text>
+          </View>
+        </Animated.View>
 
-            <Text className="text-4xl font-bold text-primary">
-              {percentage.toFixed(0)}%
-            </Text>
+        <Animated.View
+          entering={SlideInRight.duration(500).delay(400)}
+          className="px-6 mb-8"
+        >
+          <View className="flex-row justify-between gap-4">
+            <Card className="flex-1 bg-card border-0">
+              <CardContent className="p-4">
+                <View className="flex-row items-center justify-between mb-2">
+                  <CheckCircle2 size={20} className="text-green-500" />
+                  <Text className="text-2xl font-bold text-green-500">
+                    {stats.correct}
+                  </Text>
+                </View>
+                <Text className="text-sm text-muted-foreground">Correctes</Text>
+              </CardContent>
+            </Card>
 
-            <Text className="text-muted-foreground text-center">
-              You got {result.score}/{quizLength} correct answers
-            </Text>
+            <Card className="flex-1 bg-card border-0">
+              <CardContent className="p-4">
+                <View className="flex-row items-center justify-between mb-2">
+                  <XCircle size={20} className="text-red-500" />
+                  <Text className="text-2xl font-bold text-red-500">
+                    {stats.wrong}
+                  </Text>
+                </View>
+                <Text className="text-sm text-muted-foreground">
+                  Incorrectes
+                </Text>
+              </CardContent>
+            </Card>
 
-            {/* Detailed Statistics */}
-            <View className="w-full gap-2">
-              <Text className="font-semibold">Statistics:</Text>
-              <Text>
-                Date: {new Date(result.createdAt).toLocaleDateString()}
-              </Text>
-              <Text>Exam type: {result.type}</Text>
-              <Text>
-                Unanswered questions:{" "}
-                {
-                  result.quizResultElements.filter(
-                    (e) => e.userAnswerIndex === null
-                  ).length
-                }
-              </Text>
-            </View>
+            <Card className="flex-1 bg-card border-0">
+              <CardContent className="p-4">
+                <View className="flex-row items-center justify-between mb-2">
+                  <Clock size={20} className="text-yellow-500" />
+                  <Text className="text-2xl font-bold text-yellow-500">
+                    {stats.unanswered}
+                  </Text>
+                </View>
+                <Text className="text-sm text-muted-foreground">
+                  Sans réponse
+                </Text>
+              </CardContent>
+            </Card>
+          </View>
+        </Animated.View>
 
-            {/* Answer Details */}
-            <View className="w-full mt-4">
-              <Text className="font-semibold mb-2">Question Details:</Text>
-              {result.quizResultElements.reverse().map((element, index) => (
-                <Card
+        <View className="px-4 mb-8">
+          <Text className="text-xl font-semibold mb-4">Questions</Text>
+          <View className="flex-row justify-center">
+            <View className="flex-row flex-wrap justify-start w-full">
+              {result.quizResultElements.map((element, index) => (
+                <Animated.View
                   key={element.id}
-                  className="mb-2"
-                  onTouchStart={() => {
-                    console.log(
-                      "Question image before parsing:",
-                      element.question.imageUrl
-                    );
-                    router.push({
-                      pathname: "/quiz-viewer",
-                      params: {
-                        quizResultElement: JSON.stringify(element),
-                      },
-                    });
-                  }}
+                  entering={FadeInDown.duration(300).delay(
+                    Math.min(index * 50, 1000)
+                  )}
+                  className="flex-1 basis-[32%] min-w-[80px] max-w-[32%] m-[0.66%]"
                 >
-                  <CardContent className="p-4">
-                    <Text className="font-medium">Question {index + 1}</Text>
-                    <Text className="text-sm text-muted-foreground">
-                      {element.question.text}
-                    </Text>
-                    <View className="mt-2">
-                      <Text
-                        className={
-                          getAnswerStatus(element) === "Correct"
-                            ? "text-green-600"
-                            : getAnswerStatus(element) === "Incorrect"
-                            ? "text-red-600"
-                            : "text-yellow-600"
-                        }
-                      >
-                        {getAnswerStatus(element)}
-                      </Text>
-                      {element.userAnswerIndex !== null && (
-                        <Text className="text-sm">
-                          Your answer:{" "}
-                          {element.question.answers[element.userAnswerIndex]}
-                        </Text>
-                      )}
-                      <Text className="text-sm text-green-600">
-                        Correct answer:{" "}
-                        {element.question.answers[element.question.answerIndex]}
-                      </Text>
-                    </View>
-                  </CardContent>
-                </Card>
+                  <Pressable
+                    onPress={() => {
+                      router.push({
+                        pathname: "/quiz-viewer",
+                        params: {
+                          quizResultElement: JSON.stringify(element),
+                        },
+                      });
+                    }}
+                  >
+                    <Card className="overflow-hidden border-0">
+                      <View className="relative">
+                        {element.question.thumbnailUrl && (
+                          <Image
+                            source={{
+                              uri: formatFirebaseUrl(
+                                element.question.thumbnailUrl
+                              ),
+                            }}
+                            className="w-full aspect-square"
+                            resizeMode="cover"
+                          />
+                        )}
+                        <View
+                          className={`
+                          absolute top-2 right-2 w-6 h-6 rounded-full 
+                          items-center justify-center
+                          ${
+                            element.userAnswerIndex ===
+                            element.question.answerIndex
+                              ? "bg-green-500"
+                              : element.userAnswerIndex === null
+                              ? "bg-yellow-500"
+                              : "bg-red-500"
+                          }
+                        `}
+                        >
+                          <Text className="text-[10px] font-bold text-white">
+                            {index + 1}
+                          </Text>
+                        </View>
+                      </View>
+                      <CardContent className="p-2">
+                        <View className="flex-row items-center justify-between">
+                          {element.userAnswerIndex ===
+                          element.question.answerIndex ? (
+                            <CheckCircle2
+                              size={16}
+                              className="text-green-500"
+                            />
+                          ) : element.userAnswerIndex === null ? (
+                            <Clock size={16} className="text-yellow-500" />
+                          ) : (
+                            <XCircle size={16} className="text-red-500" />
+                          )}
+                          <ArrowRight
+                            size={12}
+                            className="text-muted-foreground"
+                          />
+                        </View>
+                      </CardContent>
+                    </Card>
+                  </Pressable>
+                </Animated.View>
               ))}
             </View>
+          </View>
+        </View>
 
-            <Button className="w-full" onPress={() => router.push("/home")}>
-              <Text className="text-primary-foreground">Back to Home</Text>
-            </Button>
-          </CardContent>
-        </Card>
+        <View className="p-6">
+          <Button
+            className="bg-primary flex-row items-center justify-center"
+            onPress={() => router.push("/home")}
+          >
+            <Text className="text-white">Retour à l'accueil</Text>
+          </Button>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

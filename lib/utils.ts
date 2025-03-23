@@ -35,6 +35,14 @@ export const shuffleAnswers = (question: QuizQuestion) => {
   };
 };
 
-export const cleanUrl = (url: string) => {
-  return url.replace(/\/images\//, "/images%2F");
+export const formatFirebaseUrl = (url: string) => {
+  const formattedUrl = url
+    .replace("/images/", "/images%2F")
+    .replace("thumbnails/", "thumbnails%2F");
+
+  return formattedUrl;
+};
+
+export const isPassed = (score: number, totalQuestions: number) => {
+  return score / totalQuestions > 0.8;
 };

@@ -1,11 +1,9 @@
 import { useLocalSearchParams } from "expo-router";
-import { SafeAreaView, View } from "react-native";
-import { QuizType } from "~/enums/quiz-type.enum";
+import { SafeAreaView } from "react-native";
 import QuizViewer from "~/components/quiz/QuizViewer";
-import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
 import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 import { QuizResultElement } from "~/interfaces/quiz-result-element.interface";
-import { cleanUrl } from "~/lib/utils";
+import { formatFirebaseUrl } from "~/lib/utils";
 
 export default function QuizView() {
   const { quizResultElement } = useLocalSearchParams<{
@@ -17,7 +15,7 @@ export default function QuizView() {
 
   const decodedQuestion: QuizQuestion = {
     ...quizResultElementParsed.question,
-    imageUrl: cleanUrl(quizResultElementParsed.question.imageUrl),
+    imageUrl: formatFirebaseUrl(quizResultElementParsed.question.imageUrl),
   };
 
   return (

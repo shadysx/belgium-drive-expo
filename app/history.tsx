@@ -7,6 +7,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { Trophy, Timer, Target } from "lucide-react-native";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetQuizResults } from "~/hooks/useQuery/useQuizResults";
+import { isPassed } from "~/lib/utils";
 
 export default function HistoryScreen() {
   const { data: quizResults, isLoading } = useGetQuizResults();
@@ -74,19 +75,26 @@ export default function HistoryScreen() {
                             <Trophy
                               size={20}
                               className={
-                                result.score >= 70
+                                isPassed(
+                                  result.score,
+                                  result.quizResultElements.length
+                                )
                                   ? "text-green-500"
                                   : "text-destructive"
                               }
                             />
                             <Text
                               className={`text-xl font-bold ${
-                                result.score >= 70
+                                isPassed(
+                                  result.score,
+                                  result.quizResultElements.length
+                                )
                                   ? "text-green-500"
                                   : "text-destructive"
                               }`}
                             >
-                              {result.score}%
+                              {result.score} /{" "}
+                              {result.quizResultElements.length}
                             </Text>
                           </View>
                           <Text className="text-muted-foreground">

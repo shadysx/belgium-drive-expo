@@ -20,7 +20,7 @@ import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
 import { shuffleAnswers } from "~/lib/utils";
 import QuizViewer from "~/components/quiz/QuizViewer";
 
-const initialTimeLeft = 3;
+const initialTimeLeft = 25;
 
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -47,18 +47,13 @@ export default function QuizScreen() {
     isLoading,
   } = useGetQuiz(quizRequestParsed);
 
-  const shuffledQuestions = useMemo(
-    () => questions?.sort(() => Math.random() - 0.5),
-    [questions]
-  );
-
   const processedQuestions = useMemo(
     () =>
-      shuffledQuestions?.map((question) => {
+      questions?.map((question) => {
         const shuffledQuestion = shuffleAnswers(question);
         return shuffledQuestion;
       }),
-    [shuffledQuestions]
+    [questions]
   );
 
   const questionsLength = questions?.length ?? 0;
@@ -71,8 +66,6 @@ export default function QuizScreen() {
   const currentQuestion = useMemo(() => {
     return processedQuestions?.[currentQuestionIndex];
   }, [processedQuestions, currentQuestionIndex]);
-
-  console.log("Before parsing", currentQuestion?.imageUrl);
 
   const handleAnswer = async () => {
     try {

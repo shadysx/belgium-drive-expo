@@ -1,4 +1,4 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -15,6 +15,7 @@ import {
   LogOut,
   Check,
   Target,
+  BarChart3,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import { useGetStats } from "~/hooks/useQuery/useStats";
@@ -34,7 +35,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background">
+    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <ScrollView>
         {/* Header Welcome Section */}
         <Animated.View
@@ -92,78 +93,77 @@ export default function HomeScreen() {
             entering={FadeInDown.delay(350)}
             className="flex-row gap-4"
           >
-            <Card
-              className="flex-1 bg-primary"
-              onTouchStart={() =>
+            <Pressable
+              className="flex-1"
+              onPress={() =>
                 router.push({
                   pathname: "/quiz",
                   params: {
                     quizRequest: JSON.stringify({
-                      length: 40,
+                      length: 50,
                     }),
                     quizType: JSON.stringify(QuizType.SIMULATION),
                   },
                 })
               }
             >
-              <CardContent className="p-4 items-center">
-                <Car size={24} color="white" />
-                <Text className="text-primary-foreground mt-2 font-medium">
-                  Test Rapide
-                </Text>
-              </CardContent>
-            </Card>
+              <Card className="flex-1 bg-primary">
+                <CardContent className="p-4 items-center">
+                  <Car size={24} color="white" />
+                  <Text className="text-primary-foreground mt-2 font-medium">
+                    Simulation d'examen
+                  </Text>
+                </CardContent>
+              </Card>
+            </Pressable>
 
-            <Card
-              className="flex-1 bg-secondary"
-              onTouchStart={() =>
+            <Pressable
+              className="flex-1"
+              onPress={() =>
                 router.push({
                   pathname: "/custom-quiz-settings",
-                  params: {
-                    quizRequest: JSON.stringify({
-                      length: 10,
-                    }),
-                    quizType: JSON.stringify(QuizType.CUSTOM),
-                  },
                 })
               }
             >
-              <CardContent className="p-4 items-center">
-                <Target size={24} className="text-secondary-foreground" />
-                <Text className="text-secondary-foreground mt-2 font-medium">
-                  Test personnalisé
-                </Text>
-              </CardContent>
-            </Card>
+              <Card className="flex-1 bg-secondary">
+                <CardContent className="p-4 items-center">
+                  <Target size={24} className="text-secondary-foreground" />
+                  <Text className="text-secondary-foreground mt-2 font-medium">
+                    Test personnalisé
+                  </Text>
+                </CardContent>
+              </Card>
+            </Pressable>
           </Animated.View>
 
           <Animated.View
             entering={FadeInDown.delay(400)}
             className="flex-row gap-4"
           >
-            <Card
-              className="flex-1 bg-muted"
-              onTouchStart={() => router.push("/history")}
+            <Pressable
+              className="flex-1"
+              onPress={() => router.push("/history")}
             >
-              <CardContent className="p-4 items-center">
-                <History size={24} className="text-muted-foreground" />
-                <Text className="text-muted-foreground mt-2 font-medium">
-                  Historique
-                </Text>
-              </CardContent>
-            </Card>
+              <Card className="flex-1 bg-muted">
+                <CardContent className="p-4 items-center">
+                  <History size={24} className="text-muted-foreground" />
+                  <Text className="text-muted-foreground mt-2 font-medium">
+                    Historique
+                  </Text>
+                </CardContent>
+              </Card>
+            </Pressable>
 
-            <Card
-              className="flex-1 bg-muted"
-              // onTouchStart={() => router.push("/stats")}
-            >
-              <CardContent className="p-4 items-center">
-                <Trophy size={24} className="text-muted-foreground" />
-                <Text className="text-muted-foreground mt-2 font-medium">
-                  Statistiques
-                </Text>
-              </CardContent>
-            </Card>
+            <Pressable className="flex-1" onPress={() => router.push("/stats")}>
+              <Card className="flex-1 bg-muted">
+                <CardContent className="p-4 items-center">
+                  <BarChart3 size={24} className="text-muted-foreground" />
+                  <Text className="text-muted-foreground mt-2 font-medium">
+                    Statistiques
+                  </Text>
+                </CardContent>
+              </Card>
+            </Pressable>
           </Animated.View>
 
           {/* Practice Sections */}
@@ -171,34 +171,10 @@ export default function HomeScreen() {
             <Text className="text-lg font-semibold mb-3">Catégories</Text>
 
             <View className="gap-3">
-              <Card
-                onTouchStart={() => {
-                  router.push({
-                    pathname: "/quiz",
-                    params: {
-                      quizRequest: JSON.stringify({
-                        length: 50,
-                      }),
-                      quizType: JSON.stringify(QuizType.SIMULATION),
-                    },
-                  });
-                }}
-              >
-                <CardContent className="flex-row items-center p-4">
-                  <View className="flex-1">
-                    <Text className="font-medium">Examen Blanc</Text>
-                    <Text className="text-muted-foreground text-sm">
-                      50 questions • 45 minutes
-                    </Text>
-                  </View>
-                  <Timer className="text-primary" size={24} />
-                </CardContent>
-              </Card>
-
               {themes?.map((theme: ThemeWithQuestions) => (
-                <Card
+                <Pressable
                   key={theme.id}
-                  onTouchStart={() => {
+                  onPress={() => {
                     router.push({
                       pathname: "/quiz",
                       params: {
@@ -211,19 +187,21 @@ export default function HomeScreen() {
                     });
                   }}
                 >
-                  <CardContent className="flex-row items-center p-4">
-                    <View className="flex-1">
-                      <Text className="font-medium">
-                        {formatName(theme.name)}
-                      </Text>
-                      <Text className="text-muted-foreground text-sm">
-                        {theme.questions.length} questions
-                      </Text>
-                    </View>
-                    {/* TODO: Add custom icons */}
-                    <Timer className="text-primary" size={24} />
-                  </CardContent>
-                </Card>
+                  <Card>
+                    <CardContent className="flex-row items-center p-4">
+                      <View className="flex-1">
+                        <Text className="font-medium">
+                          {formatName(theme.name)}
+                        </Text>
+                        <Text className="text-muted-foreground text-sm">
+                          {theme.questions.length} questions
+                        </Text>
+                      </View>
+                      {/* TODO: Add custom icons */}
+                      <Timer className="text-primary" size={24} />
+                    </CardContent>
+                  </Card>
+                </Pressable>
               ))}
             </View>
           </Animated.View>

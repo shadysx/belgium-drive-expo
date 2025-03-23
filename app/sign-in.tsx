@@ -25,7 +25,9 @@ const SignIn = () => {
         },
         {
           onSuccess: () => {},
-          onError: (error) => {},
+          onError: (error) => {
+            console.log(error);
+          },
         }
       );
     } catch (error) {}
