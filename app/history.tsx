@@ -1,13 +1,14 @@
-import { View, ScrollView, Image } from "react-native";
+import { View, ScrollView, Image, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent } from "~/components/ui/card";
 import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { Trophy, Timer, Target } from "lucide-react-native";
+import { Trophy, Timer, Target, ChevronRight } from "lucide-react-native";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetQuizResults } from "~/hooks/useQuery/useQuizResults";
 import { isPassed } from "~/lib/utils";
+import { router } from "expo-router";
 
 export default function HistoryScreen() {
   const { data: quizResults, isLoading } = useGetQuizResults();
@@ -51,9 +52,14 @@ export default function HistoryScreen() {
           <View className="gap-4">
             {quizResults &&
               quizResults.map((result, index) => (
-                <Animated.View
+                <Pressable
                   key={result.id}
-                  entering={FadeInDown.delay(index * 100)}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/results",
+                      params: { quizResult: JSON.stringify(result) },
+                    })
+                  }
                 >
                   <Card>
                     <CardContent className="p-4">
@@ -102,9 +108,16 @@ export default function HistoryScreen() {
                           </Text>
                         </View>
                       </View>
+
+                      <View className="absolute bottom-4 right-2">
+                        <ChevronRight
+                          size={16}
+                          className="text-muted-foreground"
+                        />
+                      </View>
                     </CardContent>
                   </Card>
-                </Animated.View>
+                </Pressable>
               ))}
           </View>
         </View>

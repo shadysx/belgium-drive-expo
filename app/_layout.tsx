@@ -80,11 +80,13 @@ export default function RootLayout() {
       <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
       <QueryClientProvider client={queryClient}>
         <Stack>
+          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+          <Stack.Screen name="sign-up" options={{ headerShown: false }} />
           <Stack.Screen
             name="index"
             options={{
               title: "Belgium Drive",
-              headerRight: () => <ThemeToggle />,
+              headerShown: false,
             }}
           />
           <Stack.Screen name="home" options={{ headerShown: false }} />
@@ -104,6 +106,13 @@ export default function RootLayout() {
             name="quiz-viewer"
             options={{
               title: "Détail de la question",
+            }}
+          />
+          <Stack.Screen
+            name="trophies"
+            options={{
+              title: "Trophées",
+              headerShown: false,
             }}
           />
         </Stack>

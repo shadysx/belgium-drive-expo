@@ -16,6 +16,8 @@ import {
   Check,
   Target,
   BarChart3,
+  PlayCircle,
+  Play,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import { useGetStats } from "~/hooks/useQuery/useStats";
@@ -23,6 +25,7 @@ import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetThemesWithQuestions } from "~/hooks/useQuery/useThemes";
 import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
+import { ThemeToggle } from "~/components/ThemeToggle";
 
 export default function HomeScreen() {
   const { data: session } = authClient.useSession();
@@ -54,12 +57,12 @@ export default function HomeScreen() {
             <Button variant="ghost" size="icon" onPress={handleSignOut}>
               <LogOut size={20} className="text-muted-foreground" />
             </Button>
+            <ThemeToggle />
           </View>
         </Animated.View>
 
         {/* Quick Actions */}
         <View className="p-6 gap-4">
-          {/* Statistics */}
           <Animated.View
             entering={FadeInDown.delay(300)}
             className="flex-row gap-4"
@@ -154,12 +157,15 @@ export default function HomeScreen() {
               </Card>
             </Pressable>
 
-            <Pressable className="flex-1" onPress={() => router.push("/stats")}>
+            <Pressable
+              className="flex-1"
+              onPress={() => router.push("/trophies")}
+            >
               <Card className="flex-1 bg-muted">
                 <CardContent className="p-4 items-center">
-                  <BarChart3 size={24} className="text-muted-foreground" />
+                  <Trophy size={24} className="text-muted-foreground" />
                   <Text className="text-muted-foreground mt-2 font-medium">
-                    Statistiques
+                    Trophées
                   </Text>
                 </CardContent>
               </Card>
@@ -198,7 +204,7 @@ export default function HomeScreen() {
                         </Text>
                       </View>
                       {/* TODO: Add custom icons */}
-                      <Timer className="text-primary" size={24} />
+                      <Play className="text-primary" size={24} />
                     </CardContent>
                   </Card>
                 </Pressable>

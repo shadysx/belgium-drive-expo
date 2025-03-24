@@ -14,9 +14,8 @@ import { CheckCircle2, XCircle, Clock, ArrowRight } from "lucide-react-native";
 import { formatFirebaseUrl, isPassed } from "~/lib/utils";
 
 export default function ResultsScreen() {
-  const { quizResult, quizLength } = useLocalSearchParams<{
+  const { quizResult } = useLocalSearchParams<{
     quizResult: string;
-    quizLength: string;
   }>();
 
   const result: QuizResult = JSON.parse(quizResult);
@@ -69,7 +68,7 @@ export default function ResultsScreen() {
               ${passed ? "text-green-500" : "text-red-500"}
             `}
             >
-              {`${result.score} / ${quizLength}`}
+              {`${result.score} / ${result.quizResultElements.length}`}
             </Text>
             <Text className="text-muted-foreground">Score</Text>
           </View>
