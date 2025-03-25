@@ -11,25 +11,27 @@ import { Input } from "~/components/ui/input";
 import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
+import { useInitializeUserAchievements } from "~/hooks/useQuery/useUserAchievements";
 
 const SignIn = () => {
   const [email, setEmail] = useState("test@mail.com");
   const [password, setPassword] = useState("password");
+  const initializeUserAchievements = useInitializeUserAchievements();
 
   const handleSignIn = async () => {
     try {
-      const session = await authClient.signIn.email(
+      await authClient.signIn.email(
         {
           email,
           password,
         },
         {
-          onSuccess: () => {},
           onError: (error) => {
             console.log(error);
           },
         }
       );
+      await initializeUserAchievements.mutateAsync();
     } catch (error) {}
   };
 

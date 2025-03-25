@@ -9,7 +9,7 @@ import QuizButtons from "~/components/quiz/QuizButtons";
 import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 import QuizHeader from "~/components/quiz/QuizHeader";
 import { QuizType } from "~/enums/quiz-type.enum";
-import { SERVER_BASE_URL } from "~/lib/constants";
+import { NOTIFICATION_DELAY, SERVER_BASE_URL } from "~/lib/constants";
 import { QuizSubmission } from "~/interfaces/dto/quiz-submission.interface";
 import { QuizSubmissionElement } from "~/interfaces/dto/quiz-submission-element.interface";
 import { useSubmitQuiz } from "~/hooks/useQuery/useSubmitQuiz";
@@ -19,6 +19,7 @@ import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
 import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
 import { shuffleAnswers } from "~/lib/utils";
 import QuizViewer from "~/components/quiz/QuizViewer";
+import { useAchievementNotification } from "~/src/contexts/achievement-context";
 
 const initialTimeLeft = 25;
 
@@ -58,6 +59,7 @@ export default function QuizScreen() {
 
   const questionsLength = questions?.length ?? 0;
 
+  const { showAchievement } = useAchievementNotification();
   const submitQuizMutation = useSubmitQuiz();
   const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () => {
     handleAnswer();
@@ -98,6 +100,11 @@ export default function QuizScreen() {
         resetTimer();
       } else {
         const result = await submitQuizMutation.mutateAsync(quizSubmission);
+
+        if (result.completedUserAchievements) {
+          showAchievement(result.completedUserAchievements[0].achievement);
+        }
+
         router.replace({
           pathname: "/results",
           params: {

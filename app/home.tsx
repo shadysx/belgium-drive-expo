@@ -26,6 +26,7 @@ import { useGetThemesWithQuestions } from "~/hooks/useQuery/useThemes";
 import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
 import { ThemeToggle } from "~/components/ThemeToggle";
+import { useAchievementNotification } from "~/src/contexts/achievement-context";
 
 export default function HomeScreen() {
   const { data: session } = authClient.useSession();
@@ -159,7 +160,7 @@ export default function HomeScreen() {
 
             <Pressable
               className="flex-1"
-              onPress={() => router.push("/trophies")}
+              onPress={() => router.push("/achievements")}
             >
               <Card className="flex-1 bg-muted">
                 <CardContent className="p-4 items-center">

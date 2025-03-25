@@ -18,6 +18,7 @@ import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { authClient } from "~/lib/auth-client";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AchievementProvider } from "~/src/contexts/achievement-context";
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -77,46 +78,49 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-      <QueryClientProvider client={queryClient}>
-        <Stack>
-          <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-          <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="index"
-            options={{
-              title: "Belgium Drive",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="home" options={{ headerShown: false }} />
-          <Stack.Screen name="quiz" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="results"
-            options={{ headerShown: false, title: "Résultats" }}
-          />
-          <Stack.Screen
-            name="custom-quiz-settings"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen name="history" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="quiz-viewer"
-            options={{
-              title: "Détail de la question",
-            }}
-          />
-          <Stack.Screen
-            name="trophies"
-            options={{
-              title: "Trophées",
-              headerShown: false,
-            }}
-          />
-        </Stack>
-      </QueryClientProvider>
+      <AchievementProvider>
+        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+
+        <QueryClientProvider client={queryClient}>
+          <Stack>
+            <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-up" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="index"
+              options={{
+                title: "Belgium Drive",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="home" options={{ headerShown: false }} />
+            <Stack.Screen name="quiz" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="results"
+              options={{ headerShown: false, title: "Résultats" }}
+            />
+            <Stack.Screen
+              name="custom-quiz-settings"
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen name="history" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="quiz-viewer"
+              options={{
+                title: "Détail de la question",
+              }}
+            />
+            <Stack.Screen
+              name="achievements"
+              options={{
+                title: "Trophées",
+                headerShown: false,
+              }}
+            />
+          </Stack>
+        </QueryClientProvider>
+      </AchievementProvider>
       <PortalHost />
     </ThemeProvider>
   );

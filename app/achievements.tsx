@@ -4,21 +4,10 @@ import { Text } from "~/components/ui/text";
 import { Card, CardContent } from "~/components/ui/card";
 import { Trophy, Target, CheckCircle2, Flame, Star } from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { useGetAchievements } from "~/hooks/useQuery/useAchievements";
+import { useGetUserAchievements } from "~/hooks/useQuery/useUserAchievements";
 
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  currentProgress: number;
-  maxProgress: number;
-  xp: number;
-  icon: React.ReactNode;
-  completed: boolean;
-}
-
-export default function TrophiesScreen() {
-  const { data: userAchievements } = useGetAchievements();
+export default function AchievementsScreen() {
+  const { data: userAchievements } = useGetUserAchievements();
 
   return (
     <SafeAreaView className="flex-1 bg-background">

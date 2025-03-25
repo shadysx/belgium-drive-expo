@@ -11,11 +11,13 @@ import { Input } from "~/components/ui/input";
 import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
+import { useInitializeUserAchievements } from "~/hooks/useQuery/useUserAchievements";
 
 const SignUp = () => {
   const [email, setEmail] = useState("test@mail.com");
   const [name, setName] = useState("Laurent");
   const [password, setPassword] = useState("password");
+  const initializeUserAchievements = useInitializeUserAchievements();
 
   const handleSignUp = async () => {
     try {
@@ -24,6 +26,8 @@ const SignUp = () => {
         password,
         name,
       });
+      await initializeUserAchievements.mutateAsync();
+      router.replace("/home");
     } catch {}
   };
 

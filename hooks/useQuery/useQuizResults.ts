@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { SERVER_BASE_URL } from "~/lib/constants";
-import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 import { authClient } from "~/lib/auth-client";
 import { QuizResult } from "~/interfaces/quiz-result.interface";
 

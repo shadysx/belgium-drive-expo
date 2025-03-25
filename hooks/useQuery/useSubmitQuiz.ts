@@ -4,10 +4,11 @@ import { QuizSubmission } from "~/interfaces/dto/quiz-submission.interface";
 import { QuizResult } from "~/interfaces/quiz-result.interface";
 import { authClient } from "~/lib/auth-client";
 import { useQueryClient } from "@tanstack/react-query";
+import { QuizResultDto } from "~/interfaces/dto/quiz-result.dto.interface";
 
 export const useSubmitQuiz = () => {
   const queryClient = useQueryClient();
-  return useMutation<QuizResult, Error, QuizSubmission>({
+  return useMutation<QuizResultDto, Error, QuizSubmission>({
     mutationFn: async (quizSubmission: QuizSubmission) => {
       const cookies = authClient.getCookie();
       const headers = {
@@ -26,7 +27,9 @@ export const useSubmitQuiz = () => {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["stats"] });
+      queryClient.invalidateQueries({
+        queryKey: ["stats", "user-achievements"],
+      });
     },
   });
 };
