@@ -29,8 +29,6 @@ const QUESTION_COUNTS_OPTIONS = [
   { label: "60 questions", value: "60" },
   { label: "70 questions", value: "70" },
   { label: "80 questions", value: "80" },
-  { label: "90 questions", value: "90" },
-  { label: "100 questions", value: "100" },
 ];
 
 const schema = yup

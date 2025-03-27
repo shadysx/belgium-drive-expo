@@ -27,6 +27,9 @@ import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
 import { ThemeToggle } from "~/components/ThemeToggle";
 import { useAchievementNotification } from "~/src/contexts/achievement-context";
+import StatsCard from "~/components/home/StatsCard";
+import ContrastedCardButton from "~/components/home/ContrastedCardButton";
+import CardButton from "~/components/home/CardButton";
 
 export default function HomeScreen() {
   const { data: session } = authClient.useSession();
@@ -68,37 +71,27 @@ export default function HomeScreen() {
             entering={FadeInDown.delay(300)}
             className="flex-row gap-4"
           >
-            <Card className="flex-1">
-              <CardContent className="p-4">
-                <Check size={20} className="text-primary" />
-                <Text className="text-2xl font-bold mt-2">
-                  {stats?.successQuizElementRatio?.toFixed(2) ?? "100.00"}%
-                </Text>
-                <Text className="text-muted-foreground text-sm">
-                  Taux de bonnes réponses
-                </Text>
-              </CardContent>
-            </Card>
-
-            <Card className="flex-1">
-              <CardContent className="p-4">
-                <Brain size={20} className="text-purple-500" />
-                <Text className="text-2xl font-bold mt-2">
-                  {stats?.totalQuestionsAnswered ?? 0}
-                </Text>
-                <Text className="text-muted-foreground text-sm">
-                  Questions répondues
-                </Text>
-              </CardContent>
-            </Card>
+            <StatsCard
+              icon={<Check size={24} className="text-primary" />}
+              value={`${
+                stats?.successQuizElementRatio?.toFixed(2) ?? "100.00"
+              }%`}
+              text="Taux de bonnes réponses"
+            />
+            <StatsCard
+              icon={<Brain size={24} className="text-purple-500" />}
+              value={stats?.totalQuestionsAnswered?.toString() ?? "0"}
+              text="Questions répondues"
+            />
           </Animated.View>
 
           <Animated.View
             entering={FadeInDown.delay(350)}
             className="flex-row gap-4"
           >
-            <Pressable
-              className="flex-1"
+            <ContrastedCardButton
+              icon={<Car size={24} color="white" />}
+              text="Simulation d'examen"
               onPress={() =>
                 router.push({
                   pathname: "/quiz",
@@ -110,67 +103,30 @@ export default function HomeScreen() {
                   },
                 })
               }
-            >
-              <Card className="flex-1 bg-primary">
-                <CardContent className="p-4 items-center">
-                  <Car size={24} color="white" />
-                  <Text className="text-primary-foreground mt-2 font-medium">
-                    Simulation d'examen
-                  </Text>
-                </CardContent>
-              </Card>
-            </Pressable>
+            />
 
-            <Pressable
-              className="flex-1"
-              onPress={() =>
-                router.push({
-                  pathname: "/custom-quiz-settings",
-                })
-              }
-            >
-              <Card className="flex-1 bg-secondary">
-                <CardContent className="p-4 items-center">
-                  <Target size={24} className="text-secondary-foreground" />
-                  <Text className="text-secondary-foreground mt-2 font-medium">
-                    Test personnalisé
-                  </Text>
-                </CardContent>
-              </Card>
-            </Pressable>
+            <CardButton
+              icon={<Target size={24} />}
+              text="Examen personnalisé"
+              onPress={() => router.push("/custom-quiz-settings")}
+            />
           </Animated.View>
 
           <Animated.View
             entering={FadeInDown.delay(400)}
             className="flex-row gap-4"
           >
-            <Pressable
-              className="flex-1"
+            <CardButton
+              icon={<History size={20} />}
+              text="Historique"
               onPress={() => router.push("/history")}
-            >
-              <Card className="flex-1 bg-muted">
-                <CardContent className="p-4 items-center">
-                  <History size={24} className="text-muted-foreground" />
-                  <Text className="text-muted-foreground mt-2 font-medium">
-                    Historique
-                  </Text>
-                </CardContent>
-              </Card>
-            </Pressable>
+            />
 
-            <Pressable
-              className="flex-1"
+            <CardButton
+              icon={<Trophy size={20} />}
+              text="Trophées"
               onPress={() => router.push("/achievements")}
-            >
-              <Card className="flex-1 bg-muted">
-                <CardContent className="p-4 items-center">
-                  <Trophy size={24} className="text-muted-foreground" />
-                  <Text className="text-muted-foreground mt-2 font-medium">
-                    Trophées
-                  </Text>
-                </CardContent>
-              </Card>
-            </Pressable>
+            />
           </Animated.View>
 
           {/* Practice Sections */}

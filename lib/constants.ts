@@ -17,7 +17,7 @@ export const NAV_THEME = {
   },
 };
 
-export const SERVER_BASE_URL = "http://localhost:3000";
-// export const SERVER_BASE_URL = "http://192.168.0.205:3000";
+// export const SERVER_BASE_URL = "http://localhost:3000";
+export const SERVER_BASE_URL = "http://192.168.0.103:3000";
 
 export const NOTIFICATION_DELAY = 5000;

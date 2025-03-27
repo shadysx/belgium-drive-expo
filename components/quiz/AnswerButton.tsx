@@ -38,7 +38,7 @@ const AnswerButton = ({
       >
         <Text
           className={`
-            text-base font-medium text-center
+            text-base font-medium text-center flex-wrap
             ${isSelected || isGreen || isRed ? "text-white" : "text-primary"}
           `}
         >

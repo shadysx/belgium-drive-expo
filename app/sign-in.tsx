@@ -12,14 +12,17 @@ import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
 import { useInitializeUserAchievements } from "~/hooks/useQuery/useUserAchievements";
+import LoadingButton from "~/components/shared/LoadingButton";
 
 const SignIn = () => {
   const [email, setEmail] = useState("test@mail.com");
   const [password, setPassword] = useState("password");
   const initializeUserAchievements = useInitializeUserAchievements();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = async () => {
     try {
+      setIsLoading(true);
       await authClient.signIn.email(
         {
           email,
@@ -32,7 +35,11 @@ const SignIn = () => {
         }
       );
       await initializeUserAchievements.mutateAsync();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -71,9 +78,11 @@ const SignIn = () => {
         </CardContent>
 
         <CardFooter className="flex-col gap-4">
-          <Button className="w-full" onPress={handleSignIn}>
-            <Text className="text-primary-foreground">Sign In</Text>
-          </Button>
+          <LoadingButton
+            text="Sign In"
+            isLoading={isLoading}
+            onPress={handleSignIn}
+          />
 
           <Text
             className="text-sm text-muted-foreground text-center active:opacity-70"
