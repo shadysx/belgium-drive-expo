@@ -52,9 +52,11 @@ export default function RootLayout() {
 
     if (session && isPublicRoute) {
       router.replace("/home");
+      return;
     }
     if (!session && !isPublicRoute) {
       router.replace("/sign-in");
+      return;
     }
   }, [session, isPending, segments]);
 
@@ -115,6 +117,13 @@ export default function RootLayout() {
               name="achievements"
               options={{
                 title: "Trophées",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="settings"
+              options={{
+                title: "Paramètres",
                 headerShown: false,
               }}
             />

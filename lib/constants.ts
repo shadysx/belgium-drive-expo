@@ -21,3 +21,14 @@ export const NAV_THEME = {
 export const SERVER_BASE_URL = "http://192.168.0.103:3000";
 
 export const NOTIFICATION_DELAY = 5000;
+
+export const QUESTION_COUNTS_OPTIONS = [
+  { label: "10 questions", value: "10" },
+  { label: "20 questions", value: "20" },
+  { label: "30 questions", value: "30" },
+  { label: "40 questions", value: "40" },
+  { label: "50 questions", value: "50" },
+  { label: "60 questions", value: "60" },
+  { label: "70 questions", value: "70" },
+  { label: "80 questions", value: "80" },
+];

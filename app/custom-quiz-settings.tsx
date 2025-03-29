@@ -16,35 +16,13 @@ import { useGetThemes } from "~/hooks/useQuery/useThemes";
 import { Theme } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
 import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
-
-const QUESTION_COUNTS_OPTIONS = [
-  { label: "10 questions", value: "10" },
-  { label: "20 questions", value: "20" },
-  { label: "30 questions", value: "30" },
-  { label: "40 questions", value: "40" },
-  { label: "50 questions", value: "50" },
-  { label: "60 questions", value: "60" },
-  { label: "70 questions", value: "70" },
-  { label: "80 questions", value: "80" },
-];
-
-const schema = yup
-  .object({
-    questionCount: yup.object({
-      value: yup.string().required("Nombre de questions requis"),
-      label: yup.string().required(),
-    }),
-    theme: yup.object({
-      value: yup.string().required("Thème requis"),
-      label: yup.string().required(),
-    }),
-  })
-  .required();
-
-type FormData = yup.InferType<typeof schema>;
+import { Header } from "~/components/shared/Header";
+import { CustomQuizSettingsFormData } from "~/lib/forms/custom-quiz-settings.form";
+import { customQuizSettingsFormSchema } from "~/lib/forms/custom-quiz-settings.form";
+import { QUESTION_COUNTS_OPTIONS } from "~/lib/constants";
+import ErrorText from "~/components/shared/ErrorText";
 
 export default function CustomQuizSettings() {
   const insets = useSafeAreaInsets();
@@ -60,8 +38,8 @@ export default function CustomQuizSettings() {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm<FormData>({
-    resolver: yupResolver(schema),
+  } = useForm<CustomQuizSettingsFormData>({
+    resolver: yupResolver(customQuizSettingsFormSchema),
     defaultValues: {
       questionCount: QUESTION_COUNTS_OPTIONS[0],
       theme: {
@@ -71,7 +49,7 @@ export default function CustomQuizSettings() {
     },
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: CustomQuizSettingsFormData) => {
     router.push({
       pathname: "/quiz",
       params: {
@@ -94,13 +72,9 @@ export default function CustomQuizSettings() {
 
   return (
     <SafeAreaView className="flex-1 bg-background">
+      <Header title="Test personnalisé" />
       <View className="flex-1 justify-between">
         <View className="p-6">
-          <Text className="text-4xl font-bold mb-2">Test personnalisé</Text>
-          <Text className="text-muted-foreground mb-8">
-            Configurez votre test selon vos besoins
-          </Text>
-
           <View className="gap-8 bg-background">
             <View className="gap-4">
               <Text className="text-lg font-semibold">Nombre de questions</Text>
@@ -142,10 +116,8 @@ export default function CustomQuizSettings() {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    {errors.questionCount && (
-                      <Text className="text-red-500 text-sm mt-1">
-                        {errors.questionCount.message}
-                      </Text>
+                    {errors.questionCount?.message && (
+                      <ErrorText errorMessage={errors.questionCount.message} />
                     )}
                   </>
                 )}
@@ -202,11 +174,9 @@ export default function CustomQuizSettings() {
           </View>
         </View>
 
-        <View className="px-6">
+        <View className="px-6 py-8">
           <Button onPress={handleSubmit(onSubmit)} size="lg">
-            <Text className="text-primary-foreground text-lg font-semibold">
-              Commencer le test
-            </Text>
+            <Text>Commencer le test</Text>
           </Button>
         </View>
       </View>

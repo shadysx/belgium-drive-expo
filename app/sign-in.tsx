@@ -11,30 +11,49 @@ import { Input } from "~/components/ui/input";
 import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
-import { useInitializeUserAchievements } from "~/hooks/useQuery/useUserAchievements";
 import LoadingButton from "~/components/shared/LoadingButton";
+import { Controller, useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import React from "react";
+import { signInFormSchema, SignInFormData } from "~/lib/forms/sign-in.form";
+import ErrorText from "~/components/shared/ErrorText";
 
 const SignIn = () => {
-  const [email, setEmail] = useState("test@mail.com");
-  const [password, setPassword] = useState("password");
-  const initializeUserAchievements = useInitializeUserAchievements();
   const [isLoading, setIsLoading] = useState(false);
+  const [signinError, setIsError] = useState<string | null>(null);
 
-  const handleSignIn = async () => {
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<SignInFormData>({
+    resolver: yupResolver(signInFormSchema),
+    defaultValues: {
+      email: "test@mail.com",
+      password: "password",
+    },
+    mode: "onSubmit",
+  });
+
+  const onSubmit = async (data: SignInFormData) => {
     try {
       setIsLoading(true);
       await authClient.signIn.email(
         {
-          email,
-          password,
+          email: data.email,
+          password: data.password,
         },
         {
           onError: (error) => {
-            console.log(error);
+            if (error.error.code === "INVALID_EMAIL_OR_PASSWORD") {
+              setIsError("Email ou mot de passe invalide");
+            } else {
+              setIsError("Une erreur est survenue");
+            }
           },
         }
       );
-      await initializeUserAchievements.mutateAsync();
     } catch (error) {
       console.log(error);
     } finally {
@@ -55,33 +74,56 @@ const SignIn = () => {
         <CardContent className="gap-4">
           <View className="gap-2">
             <Text className="text-sm text-muted-foreground">Email</Text>
-            <Input
-              value={email}
-              onChangeText={setEmail}
-              className="bg-background"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    className="bg-background"
+                    placeholder="Enter your email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  {errors.email?.message && (
+                    <ErrorText errorMessage={errors.email.message} />
+                  )}
+                </>
+              )}
             />
           </View>
 
           <View className="gap-2">
             <Text className="text-sm text-muted-foreground">Password</Text>
-            <Input
-              value={password}
-              onChangeText={setPassword}
-              className="bg-background"
-              placeholder="Enter your password"
-              secureTextEntry
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    className="bg-background"
+                    placeholder="Enter your password"
+                    secureTextEntry
+                  />
+                  {errors.password?.message && (
+                    <ErrorText errorMessage={errors.password.message} />
+                  )}
+                </>
+              )}
             />
           </View>
         </CardContent>
 
         <CardFooter className="flex-col gap-4">
+          {signinError && <ErrorText errorMessage={signinError} />}
           <LoadingButton
             text="Sign In"
             isLoading={isLoading}
-            onPress={handleSignIn}
+            onPress={handleSubmit(onSubmit)}
           />
 
           <Text

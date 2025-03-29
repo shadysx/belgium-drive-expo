@@ -11,25 +11,49 @@ import { Input } from "~/components/ui/input";
 import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
-import { useInitializeUserAchievements } from "~/hooks/useQuery/useUserAchievements";
 import LoadingButton from "~/components/shared/LoadingButton";
+import { Controller, useForm } from "react-hook-form";
+import { SignUpFormData, signUpFormSchema } from "~/lib/forms/sign-up.form";
+import ErrorText from "~/components/shared/ErrorText";
+import React from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("test@mail.com");
-  const [name, setName] = useState("Laurent");
-  const [password, setPassword] = useState("password");
-  const initializeUserAchievements = useInitializeUserAchievements();
   const [isLoading, setIsLoading] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormData>({
+    resolver: yupResolver(signUpFormSchema),
+    defaultValues: {
+      email: "test@mail.com",
+      password: "password",
+      name: "Laurent",
+    },
+  });
 
-  const handleSignUp = async () => {
+  const onSubmit = async (data: SignUpFormData) => {
     try {
       setIsLoading(true);
-      await authClient.signUp.email({
-        email,
-        password,
-        name,
-      });
-      await initializeUserAchievements.mutateAsync();
+      await authClient.signUp.email(
+        {
+          email: data.email,
+          password: data.password,
+          name: data.name,
+        },
+        {
+          onError: (error) => {
+            if (error.error.code === "USER_ALREADY_EXISTS") {
+              setSignupError("Cet utilisateur existe déjà");
+            } else {
+              setSignupError("Une erreur est survenue");
+            }
+          },
+        }
+      );
+      // await initializeUserAchievements.mutateAsync();
       router.replace("/home");
     } catch {
     } finally {
@@ -50,34 +74,67 @@ const SignUp = () => {
         <CardContent className="gap-4">
           <View className="gap-2">
             <Text className="text-sm text-muted-foreground">Name</Text>
-            <Input
-              value={name}
-              onChangeText={setName}
-              className="bg-background"
-              placeholder="Enter your name"
+            <Controller
+              name="name"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    className="bg-background"
+                    placeholder="Enter your name"
+                  />
+                  {errors.name?.message && (
+                    <ErrorText errorMessage={errors.name.message} />
+                  )}
+                </>
+              )}
             />
           </View>
 
           <View className="gap-2">
             <Text className="text-sm text-muted-foreground">Email</Text>
-            <Input
-              value={email}
-              onChangeText={setEmail}
-              className="bg-background"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
+            <Controller
+              name="email"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    className="bg-background"
+                    placeholder="Enter your email"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                  {errors.email?.message && (
+                    <ErrorText errorMessage={errors.email.message} />
+                  )}
+                </>
+              )}
             />
           </View>
 
           <View className="gap-2">
             <Text className="text-sm text-muted-foreground">Password</Text>
-            <Input
-              value={password}
-              onChangeText={setPassword}
-              className="bg-background"
-              placeholder="Choose a password"
-              secureTextEntry
+            <Controller
+              name="password"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <>
+                  <Input
+                    value={value}
+                    onChangeText={onChange}
+                    className="bg-background"
+                    placeholder="Choose a password"
+                    secureTextEntry
+                  />
+                  {errors.password?.message && (
+                    <ErrorText errorMessage={errors.password.message} />
+                  )}
+                </>
+              )}
             />
           </View>
         </CardContent>
@@ -86,8 +143,9 @@ const SignUp = () => {
           <LoadingButton
             text="Sign Up"
             isLoading={isLoading}
-            onPress={handleSignUp}
+            onPress={handleSubmit(onSubmit)}
           />
+          {signupError && <ErrorText errorMessage={signupError} />}
 
           <Text
             className="text-sm text-muted-foreground text-center active:opacity-70"

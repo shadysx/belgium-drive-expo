@@ -37,6 +37,7 @@ const AnswerButton = ({
         `}
       >
         <Text
+          numberOfLines={2}
           className={`
             text-base font-medium text-center flex-wrap
             ${isSelected || isGreen || isRed ? "text-white" : "text-primary"}

@@ -4,6 +4,8 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 import QuizButtons from "./QuizButtons";
+import React from "react";
+import { AspectRatio } from "~/components/ui/aspect-ratio";
 
 interface QuizViewerProps {
   question: QuizQuestion;
@@ -22,15 +24,15 @@ export default function QuizViewer({
 }: QuizViewerProps) {
   return (
     <Animated.View entering={FadeInDown.delay(200)} className="flex-1">
-      <Card className="overflow-hidden">
+      <Card>
         {question?.imageUrl && (
-          <View className="w-full aspect-[1.4]">
+          <AspectRatio ratio={1.4}>
             <Image
               source={{ uri: question.imageUrl }}
               className="w-full h-full"
               resizeMode="cover"
             />
-          </View>
+          </AspectRatio>
         )}
         <CardContent className="p-4">
           <Text className="font-medium">{question?.text}</Text>

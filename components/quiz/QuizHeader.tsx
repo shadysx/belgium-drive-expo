@@ -60,8 +60,8 @@ const QuizHeader = ({
   return (
     <View>
       <Card>
-        <CardContent className="p-6">
-          <View className="flex-row justify-between items-center mb-4">
+        <CardContent className="p-2">
+          <View className="flex-row items-center justify-between">
             <View className="flex-row items-center gap-2">
               <Animated.View
                 className="bg-primary/10 p-2 rounded-lg"
@@ -73,18 +73,21 @@ const QuizHeader = ({
                 {timeLeft}s
               </Text>
             </View>
-          </View>
 
-          <View className="h-10 relative">
-            <Progress
-              value={(currentQuestionIndex + 1) * (100 / questionsLength)}
-              className="absolute inset-0 h-full rounded-full border border-primary/20"
-              indicatorClassName="bg-primary"
-            />
-            <View className="absolute inset-0 justify-center items-center">
-              <Text className="text-sm font-bold">
-                Question {currentQuestionIndex + 1} sur {questionsLength ?? 0}
-              </Text>
+            <View className="flex-1 ml-4">
+              <View className="h-10 relative">
+                <Progress
+                  value={(currentQuestionIndex + 1) * (100 / questionsLength)}
+                  className="absolute inset-0 h-full rounded-full border border-primary/20"
+                  indicatorClassName="bg-primary"
+                />
+                <View className="absolute inset-0 justify-center items-center">
+                  <Text className="text-sm font-bold">
+                    Question {currentQuestionIndex + 1} sur{" "}
+                    {questionsLength ?? 0}
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </CardContent>

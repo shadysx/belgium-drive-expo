@@ -9,6 +9,7 @@ import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetQuizResults } from "~/hooks/useQuery/useQuizResults";
 import { isPassed } from "~/lib/utils";
 import { router } from "expo-router";
+import { Header } from "~/components/shared/Header";
 
 export default function HistoryScreen() {
   const { data: quizResults, isLoading } = useGetQuizResults();
@@ -45,10 +46,10 @@ export default function HistoryScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-      <ScrollView className="flex-1">
-        <View className="p-6">
-          <Text className="text-2xl font-bold mb-6">Historique des tests</Text>
+      <Header title="Historique" />
 
+      <ScrollView className="flex-1">
+        <View className="px-6">
           <View className="gap-4">
             {quizResults &&
               quizResults.map((result, index) => (

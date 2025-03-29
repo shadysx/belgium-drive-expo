@@ -1,23 +1,28 @@
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent } from "~/components/ui/card";
-import { Trophy, Target, CheckCircle2, Flame, Star } from "lucide-react-native";
+import {
+  Trophy,
+  Target,
+  CheckCircle2,
+  Flame,
+  Star,
+  ChevronLeft,
+} from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useGetUserAchievements } from "~/hooks/useQuery/useUserAchievements";
+import { Header } from "~/components/shared/Header";
 
 export default function AchievementsScreen() {
   const { data: userAchievements } = useGetUserAchievements();
 
   return (
     <SafeAreaView className="flex-1 bg-background">
-      <ScrollView>
-        <View className="p-6">
-          <Text className="text-3xl font-bold mb-2">Trophées</Text>
-          <Text className="text-base text-muted-foreground mb-6">
-            Suivez votre progression et débloquez des récompenses
-          </Text>
+      <Header title="Trophées" />
 
+      <ScrollView>
+        <View className="px-6">
           <View className="gap-4">
             {userAchievements &&
               userAchievements.map((userAchievement, index) => (
@@ -36,7 +41,6 @@ export default function AchievementsScreen() {
                           <Text className="text-sm text-muted-foreground mb-2">
                             {userAchievement.achievement.description}
                           </Text>
-                          {/* Barre de progression */}
                           <View className="h-2 bg-muted rounded-full overflow-hidden">
                             <View
                               className={`h-full rounded-full ${

@@ -23,28 +23,3 @@ export const useGetUserAchievements = () => {
     },
   });
 };
-
-export const useInitializeUserAchievements = () => {
-  const queryClient = useQueryClient();
-  return useMutation<UserAchievement[], Error>({
-    mutationFn: async () => {
-      const cookies = authClient.getCookie();
-      const headers = {
-        Cookie: cookies,
-      };
-      const response = await fetch(`${SERVER_BASE_URL}/api/user-achievements`, {
-        method: "POST",
-        headers,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to initialize achievements");
-      }
-
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-achievements"] });
-    },
-  });
-};

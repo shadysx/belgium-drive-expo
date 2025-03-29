@@ -37,7 +37,7 @@ export default function ResultsScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
         <Animated.View
           entering={FadeInDown.duration(500)}
           className="px-6 pt-8"
@@ -121,7 +121,7 @@ export default function ResultsScreen() {
           </View>
         </Animated.View>
 
-        <View className="px-4 mb-8">
+        <View className="px-4 mb-8 flex-1">
           <Text className="text-xl font-semibold mb-4">Questions</Text>
           <View className="flex-row justify-center">
             <View className="flex-row flex-wrap justify-start w-full">
@@ -136,7 +136,7 @@ export default function ResultsScreen() {
                   <Pressable
                     onPress={() => {
                       router.push({
-                        pathname: "/quiz-viewer",
+                        pathname: "/quiz-view",
                         params: {
                           quizResultElement: JSON.stringify(element),
                         },
@@ -202,12 +202,9 @@ export default function ResultsScreen() {
           </View>
         </View>
 
-        <View className="p-6">
-          <Button
-            className="bg-primary flex-row items-center justify-center"
-            onPress={() => router.push("/home")}
-          >
-            <Text className="text-white">Retour à l'accueil</Text>
+        <View className="px-6 pb-8">
+          <Button onPress={() => router.push("/home")} size="lg">
+            <Text>Retour à l'accueil</Text>
           </Button>
         </View>
       </ScrollView>

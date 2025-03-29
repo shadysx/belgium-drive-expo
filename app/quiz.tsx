@@ -21,7 +21,7 @@ import { shuffleAnswers } from "~/lib/utils";
 import QuizViewer from "~/components/quiz/QuizViewer";
 import { useAchievementNotification } from "~/src/contexts/achievement-context";
 
-const initialTimeLeft = 25;
+const initialTimeLeft = 200;
 
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -137,24 +137,22 @@ export default function QuizScreen() {
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1">
-        <View className="px-4 flex-1">
-          <View className="my-4">
-            <QuizHeader
-              timeLeft={timeLeft}
-              currentQuestionIndex={currentQuestionIndex}
-              questionsLength={questionsLength}
-            />
-          </View>
-
-          {currentQuestion && (
-            <QuizViewer
-              question={currentQuestion}
-              selectedAnswerIndex={selectedAnswerIndex}
-              setSelectedAnswerIndex={setSelectedAnswerIndex}
-              handleAnswer={handleAnswer}
-            />
-          )}
+        <View className="my-4">
+          <QuizHeader
+            timeLeft={timeLeft}
+            currentQuestionIndex={currentQuestionIndex}
+            questionsLength={questionsLength}
+          />
         </View>
+
+        {currentQuestion && (
+          <QuizViewer
+            question={currentQuestion}
+            selectedAnswerIndex={selectedAnswerIndex}
+            setSelectedAnswerIndex={setSelectedAnswerIndex}
+            handleAnswer={handleAnswer}
+          />
+        )}
       </View>
 
       {submitQuizMutation.isPending && (

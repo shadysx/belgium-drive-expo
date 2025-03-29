@@ -1,4 +1,4 @@
-import { View, ScrollView, Pressable } from "react-native";
+import { View, ScrollView, Pressable, Settings } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -18,6 +18,7 @@ import {
   BarChart3,
   PlayCircle,
   Play,
+  Settings2,
 } from "lucide-react-native";
 import { router } from "expo-router";
 import { useGetStats } from "~/hooks/useQuery/useStats";
@@ -30,43 +31,20 @@ import { useAchievementNotification } from "~/src/contexts/achievement-context";
 import StatsCard from "~/components/home/StatsCard";
 import ContrastedCardButton from "~/components/home/ContrastedCardButton";
 import CardButton from "~/components/home/CardButton";
+import { Header } from "~/components/home/Header";
 
 export default function HomeScreen() {
-  const { data: session } = authClient.useSession();
   const { data: stats } = useGetStats();
   const { data: themes } = useGetThemesWithQuestions();
-
-  const handleSignOut = async () => {
-    await authClient.signOut();
-    router.replace("/");
-  };
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <ScrollView>
-        {/* Header Welcome Section */}
-        <Animated.View
-          entering={FadeInDown.delay(200)}
-          className="p-6 bg-primary/5"
-        >
-          <View className="flex-row justify-between items-center">
-            <View>
-              <Text className="text-2xl font-bold">
-                Bonjour, {session?.user?.name || "Conducteur"} 👋
-              </Text>
-              <Text className="text-muted-foreground mt-1">
-                Prêt pour votre session d'entraînement ?
-              </Text>
-            </View>
-            <Button variant="ghost" size="icon" onPress={handleSignOut}>
-              <LogOut size={20} className="text-muted-foreground" />
-            </Button>
-            <ThemeToggle />
-          </View>
-        </Animated.View>
+        <View className="py-4 px-6">
+          <Header />
+        </View>
 
-        {/* Quick Actions */}
-        <View className="p-6 gap-4">
+        <View className="px-6 gap-4">
           <Animated.View
             entering={FadeInDown.delay(300)}
             className="flex-row gap-4"
@@ -117,20 +95,37 @@ export default function HomeScreen() {
             className="flex-row gap-4"
           >
             <CardButton
-              icon={<History size={20} />}
+              icon={<History size={24} />}
               text="Historique"
               onPress={() => router.push("/history")}
             />
 
             <CardButton
-              icon={<Trophy size={20} />}
+              icon={<Trophy size={24} />}
               text="Trophées"
               onPress={() => router.push("/achievements")}
             />
           </Animated.View>
 
-          {/* Practice Sections */}
-          <Animated.View entering={FadeInDown.delay(450)}>
+          {/* <Animated.View
+            entering={FadeInDown.delay(400)}
+            className="flex-row gap-4"
+          >
+            <CardButton
+              icon={<BarChart3 size={24} />}
+              text="Statistiques"
+              onPress={() => router.push("/history")}
+            />
+
+            <CardButton
+              icon={<Settings2 size={24} />}
+              text="Paramètres"
+              onPress={() => router.push("/settings")}
+            />
+          </Animated.View> */}
+
+          {/* Categories Sections */}
+          <Animated.View entering={FadeInDown.delay(450)} className="mb-6">
             <Text className="text-lg font-semibold mb-3">Catégories</Text>
 
             <View className="gap-3">
