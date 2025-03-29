@@ -1,4 +1,4 @@
-import { Achievement } from "@prisma/client";
+import { Achievement } from "./achievement";
 
 export interface UserAchievement {
   id: string;

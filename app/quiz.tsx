@@ -21,7 +21,7 @@ import { shuffleAnswers } from "~/lib/utils";
 import QuizViewer from "~/components/quiz/QuizViewer";
 import { useAchievementNotification } from "~/src/contexts/achievement-context";
 
-const initialTimeLeft = 200;
+const initialTimeLeft = 30;
 
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -101,7 +101,7 @@ export default function QuizScreen() {
       } else {
         const result = await submitQuizMutation.mutateAsync(quizSubmission);
 
-        if (result.completedUserAchievements) {
+        if (result.completedUserAchievements.length > 0) {
           showAchievement(result.completedUserAchievements[0].achievement);
         }
 
@@ -113,7 +113,9 @@ export default function QuizScreen() {
           },
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   if (isError) {

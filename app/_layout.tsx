@@ -108,7 +108,7 @@ export default function RootLayout() {
             />
             <Stack.Screen name="history" options={{ headerShown: false }} />
             <Stack.Screen
-              name="quiz-viewer"
+              name="quiz-view"
               options={{
                 title: "Détail de la question",
               }}

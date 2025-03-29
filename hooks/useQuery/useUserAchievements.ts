@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { SERVER_BASE_URL } from "~/lib/constants";
 import { authClient } from "~/lib/auth-client";
-import { UserAchievement } from "~/interfaces/user-achievement";
+import { UserAchievement } from "~/interfaces/user-achievement.interface";
 
 export const useGetUserAchievements = () => {
   return useQuery<UserAchievement[], Error>({

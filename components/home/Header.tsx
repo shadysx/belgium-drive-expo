@@ -6,12 +6,21 @@ import { ThemeToggle } from "~/components/ThemeToggle";
 import { authClient } from "~/lib/auth-client";
 import { useNavigation } from "@react-navigation/native";
 import { HeaderMenu } from "./HeaderMenu";
+import { useGetUserInfo } from "~/hooks/useQuery/useUserInfo";
 
 export function Header() {
-  const currentXP = 1250;
-  const currentLevel = 5;
-  const nextThreshold = 2000;
   const session = authClient.useSession();
+  const { data: userInfo } = useGetUserInfo();
+  const currentLevel = userInfo?.level;
+  const currentLvlXP = userInfo?.currentLvlXP;
+  const xpRequiredToLevelUp = userInfo?.xpRequiredToLevelUp;
+
+  const progress =
+    xpRequiredToLevelUp > 0 ? (currentLvlXP / xpRequiredToLevelUp) * 100 : 100;
+  const levelText =
+    xpRequiredToLevelUp === 0
+      ? "Niveau max"
+      : `${currentLvlXP} / ${xpRequiredToLevelUp} XP`;
 
   return (
     <View>
@@ -39,7 +48,7 @@ export function Header() {
         </View>
 
         <Progress
-          value={(currentXP / nextThreshold) * 100}
+          value={progress}
           className="h-2.5 bg-secondary"
           indicatorClassName="bg-primary"
         />
@@ -47,9 +56,7 @@ export function Header() {
           <Text className="text-sm text-muted-foreground">
             Niveau {currentLevel}
           </Text>
-          <Text className="text-sm text-muted-foreground">
-            {currentXP} / {nextThreshold} XP
-          </Text>
+          <Text className="text-sm text-muted-foreground">{levelText}</Text>
         </View>
       </Card>
     </View>
