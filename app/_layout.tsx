@@ -127,6 +127,13 @@ export default function RootLayout() {
                 headerShown: false,
               }}
             />
+            <Stack.Screen
+              name="leaderboards"
+              options={{
+                title: "Classements",
+                headerShown: false,
+              }}
+            />
           </Stack>
         </QueryClientProvider>
       </AchievementProvider>

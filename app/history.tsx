@@ -49,7 +49,7 @@ export default function HistoryScreen() {
       <Header title="Historique" />
 
       <ScrollView className="flex-1">
-        <View className="px-6">
+        <View className="px-4">
           <View className="gap-4">
             {quizResults &&
               quizResults.map((result, index) => (

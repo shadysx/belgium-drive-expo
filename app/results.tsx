@@ -170,10 +170,26 @@ export default function ResultsScreen() {
                           }
                         `}
                         >
-                          <Text className="text-[10px] font-bold text-white">
+                          <Text
+                            className={`
+                              text-[10px] font-bold text-white
+                              ${
+                                element.question.isSerious
+                                  ? "font-extrabold"
+                                  : ""
+                              }
+                            `}
+                          >
                             {index + 1}
                           </Text>
                         </View>
+                        {element.question.isSerious && (
+                          <View className="absolute top-2 left-2 bg-red-500 px-2 py-1 rounded-md">
+                            <Text className="text-[10px] font-bold text-white">
+                              GRAVE
+                            </Text>
+                          </View>
+                        )}
                       </View>
                       <CardContent className="p-2">
                         <View className="flex-row items-center justify-between">
@@ -186,7 +202,14 @@ export default function ResultsScreen() {
                           ) : element.userAnswerIndex === null ? (
                             <Clock size={16} className="text-yellow-500" />
                           ) : (
-                            <XCircle size={16} className="text-red-500" />
+                            <XCircle
+                              size={16}
+                              className={`${
+                                element.question.isSerious
+                                  ? "text-red-600"
+                                  : "text-red-500"
+                              }`}
+                            />
                           )}
                           <ArrowRight
                             size={12}

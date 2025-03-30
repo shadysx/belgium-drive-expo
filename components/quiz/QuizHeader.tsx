@@ -82,7 +82,7 @@ const QuizHeader = ({
                   indicatorClassName="bg-primary"
                 />
                 <View className="absolute inset-0 justify-center items-center">
-                  <Text className="text-sm font-bold">
+                  <Text className="text-sm font-bold text-white">
                     Question {currentQuestionIndex + 1} sur{" "}
                     {questionsLength ?? 0}
                   </Text>

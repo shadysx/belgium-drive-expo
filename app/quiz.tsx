@@ -138,31 +138,33 @@ export default function QuizScreen() {
 
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-1">
-        <View className="my-4">
-          <QuizHeader
-            timeLeft={timeLeft}
-            currentQuestionIndex={currentQuestionIndex}
-            questionsLength={questionsLength}
-          />
+      <View className="px-2 flex-1">
+        <View className="flex-1">
+          <View className="mb-4">
+            <QuizHeader
+              timeLeft={timeLeft}
+              currentQuestionIndex={currentQuestionIndex}
+              questionsLength={questionsLength}
+            />
+          </View>
+
+          {currentQuestion && (
+            <QuizViewer
+              question={currentQuestion}
+              selectedAnswerIndex={selectedAnswerIndex}
+              setSelectedAnswerIndex={setSelectedAnswerIndex}
+              handleAnswer={handleAnswer}
+            />
+          )}
         </View>
 
-        {currentQuestion && (
-          <QuizViewer
-            question={currentQuestion}
-            selectedAnswerIndex={selectedAnswerIndex}
-            setSelectedAnswerIndex={setSelectedAnswerIndex}
-            handleAnswer={handleAnswer}
-          />
+        {submitQuizMutation.isPending && (
+          <View className="absolute inset-0 bg-black/50 items-center justify-center">
+            <ActivityIndicator size="large" color="#fff" />
+            <Text className="text-white mt-4">Soumission en cours...</Text>
+          </View>
         )}
       </View>
-
-      {submitQuizMutation.isPending && (
-        <View className="absolute inset-0 bg-black/50 items-center justify-center">
-          <ActivityIndicator size="large" color="#fff" />
-          <Text className="text-white mt-4">Soumission en cours...</Text>
-        </View>
-      )}
     </SafeAreaView>
   );
 }

@@ -1,68 +1,38 @@
-import { View, ScrollView, Pressable, Settings } from "react-native";
+import { View, ScrollView, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { authClient } from "~/lib/auth-client";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import {
   Car,
-  Book,
   Trophy,
-  Brain,
-  Timer,
   History,
-  LogOut,
-  Check,
   Target,
   BarChart3,
-  PlayCircle,
   Play,
   Settings2,
+  Award,
 } from "lucide-react-native";
 import { router } from "expo-router";
-import { useGetStats } from "~/hooks/useQuery/useStats";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetThemesWithQuestions } from "~/hooks/useQuery/useThemes";
 import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
-import { ThemeToggle } from "~/components/ThemeToggle";
-import { useAchievementNotification } from "~/src/contexts/achievement-context";
-import StatsCard from "~/components/home/StatsCard";
 import ContrastedCardButton from "~/components/home/ContrastedCardButton";
 import CardButton from "~/components/home/CardButton";
 import { Header } from "~/components/home/Header";
 
 export default function HomeScreen() {
-  const { data: stats } = useGetStats();
   const { data: themes } = useGetThemesWithQuestions();
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <ScrollView>
-        <View className="py-4 px-6">
+        <View className="pb-4 px-4">
           <Header />
         </View>
 
-        <View className="px-6 gap-4">
-          <Animated.View
-            entering={FadeInDown.delay(300)}
-            className="flex-row gap-4"
-          >
-            <StatsCard
-              icon={<Check size={24} className="text-primary" />}
-              value={`${
-                stats?.successQuizElementRatio?.toFixed(2) ?? "100.00"
-              }%`}
-              text="Taux de bonnes réponses"
-            />
-            <StatsCard
-              icon={<Brain size={24} className="text-purple-500" />}
-              value={stats?.totalQuestionsAnswered?.toString() ?? "0"}
-              text="Questions répondues"
-            />
-          </Animated.View>
-
+        <View className="px-4 gap-4">
           <Animated.View
             entering={FadeInDown.delay(350)}
             className="flex-row gap-4"
@@ -107,7 +77,7 @@ export default function HomeScreen() {
             />
           </Animated.View>
 
-          {/* <Animated.View
+          <Animated.View
             entering={FadeInDown.delay(400)}
             className="flex-row gap-4"
           >
@@ -118,11 +88,11 @@ export default function HomeScreen() {
             />
 
             <CardButton
-              icon={<Settings2 size={24} />}
-              text="Paramètres"
-              onPress={() => router.push("/settings")}
+              icon={<Award size={24} />}
+              text="Classements"
+              onPress={() => router.push("/leaderboards")}
             />
-          </Animated.View> */}
+          </Animated.View>
 
           {/* Categories Sections */}
           <Animated.View entering={FadeInDown.delay(450)} className="mb-6">
@@ -140,7 +110,7 @@ export default function HomeScreen() {
                           length: theme.questions.length,
                           theme: theme.name,
                         }),
-                        quizType: JSON.stringify(QuizType.CUSTOM),
+                        quizType: JSON.stringify(QuizType.PREDEFINED),
                       },
                     });
                   }}
@@ -155,7 +125,6 @@ export default function HomeScreen() {
                           {theme.questions.length} questions
                         </Text>
                       </View>
-                      {/* TODO: Add custom icons */}
                       <Play className="text-primary" size={24} />
                     </CardContent>
                   </Card>

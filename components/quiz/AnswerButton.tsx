@@ -21,7 +21,7 @@ const AnswerButton = ({
   const isGreen = isReadOnly && index === 0;
   const isRed = isReadOnly && isSelected && index !== 0;
   return (
-    <View className="px-1 flex-1">
+    <View className="flex-1">
       <Button
         onPress={() => {
           setSelectedAnswerIndex?.(index);
@@ -30,7 +30,7 @@ const AnswerButton = ({
           justify-center flex-1
           ${
             isSelected
-              ? "bg-primary border-primary text-white"
+              ? "bg-primary border-primary"
               : "bg-primary/5 border-primary/20"
           }
           ${isGreen ? "bg-green-500" : isRed ? "bg-red-500" : ""}
@@ -39,8 +39,10 @@ const AnswerButton = ({
         <Text
           numberOfLines={2}
           className={`
-            text-base font-medium text-center flex-wrap
-            ${isSelected || isGreen || isRed ? "text-white" : "text-primary"}
+            font-medium text-center
+            ${
+              isSelected || isGreen || isRed ? "" : "text-black dark:text-white"
+            }
           `}
         >
           {text}

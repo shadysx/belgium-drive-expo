@@ -1,15 +1,7 @@
-import { View, ScrollView, Pressable } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent } from "~/components/ui/card";
-import {
-  Trophy,
-  Target,
-  CheckCircle2,
-  Flame,
-  Star,
-  ChevronLeft,
-} from "lucide-react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { useGetUserAchievements } from "~/hooks/useQuery/useUserAchievements";
 import { Header } from "~/components/shared/Header";
@@ -22,7 +14,7 @@ export default function AchievementsScreen() {
       <Header title="Trophées" />
 
       <ScrollView>
-        <View className="px-6">
+        <View className="px-4">
           <View className="gap-4">
             {userAchievements &&
               userAchievements.map((userAchievement, index) => (
