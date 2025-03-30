@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, ScrollView, Pressable } from "react-native";
+import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "~/components/shared/Header";
 import { Text } from "~/components/ui/text";
-import { Card, CardContent } from "~/components/ui/card";
-import Animated, { SlideInLeft } from "react-native-reanimated";
-import { cn } from "~/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { UserRow } from "~/components/leaderboards/UserRow";
+import { useGetLeaderboards } from "~/hooks/useQuery/useLeaderboards";
 
 // Mock data
 const mockUsers = [
@@ -81,177 +81,49 @@ const mockUsers = [
   },
 ];
 
-// Sort users by XP
-const sortedUsers = [...mockUsers].sort((a, b) => b.xp - a.xp);
-
-// Function to get rank styles
-const getRankStyles = (rank: number) => {
-  switch (rank) {
-    case 1:
-      return {
-        containerBg:
-          "bg-slate-800/90 border border-yellow-400/50 shadow-lg shadow-yellow-400/20",
-        numberBg: "bg-slate-700 border-yellow-400/50",
-        nameBg: "bg-slate-700 border-yellow-400/50",
-        textColor: "text-yellow-400",
-      };
-    case 2:
-      return {
-        containerBg:
-          "bg-slate-800/80 border border-blue-400/30 shadow-md shadow-blue-400/10",
-        numberBg: "bg-slate-700 border-blue-400/30",
-        nameBg: "bg-slate-700 border-blue-400/30",
-        textColor: "text-blue-400",
-      };
-    case 3:
-      return {
-        containerBg:
-          "bg-slate-800/70 border border-orange-400/30 shadow-sm shadow-orange-400/10",
-        numberBg: "bg-slate-700 border-orange-400/30",
-        nameBg: "bg-slate-700 border-orange-400/30",
-        textColor: "text-orange-400",
-      };
-    default:
-      return {
-        containerBg: (user: any) =>
-          user.isCurrentUser
-            ? "bg-slate-800/80 border border-cyan-500/50"
-            : "bg-slate-800 border-0",
-        numberBg: "bg-slate-700 border-slate-600",
-        nameBg: (user: any) =>
-          user.isCurrentUser
-            ? "bg-cyan-900/30 border-cyan-500/30"
-            : "bg-slate-700 border-slate-600",
-        textColor: (user: any) =>
-          user.isCurrentUser ? "text-cyan-400" : "text-white",
-      };
-  }
-};
-
 export default function LeaderboardScreen() {
   const [tab, setTab] = useState("global");
 
+  const { data: leaderboards } = useGetLeaderboards();
+
   return (
-    <SafeAreaView className="flex-1 bg-slate-900">
+    <SafeAreaView className="flex-1 bg-background px-2">
       <Header title="Classement" />
 
       <ScrollView className="flex-1">
-        {/* Tabs */}
-        <View className="flex-row p-4 border-b border-slate-700">
-          <Pressable
-            className={`flex-1 items-center pb-2 ${
-              tab === "global" ? "border-b-2 border-cyan-500" : ""
-            }`}
-            onPress={() => setTab("global")}
+        <View className="flex-1 justify-center">
+          <Tabs
+            value={tab}
+            onValueChange={setTab}
+            className="mx-auto flex-col gap-3"
           >
-            <View className="flex-row items-center">
-              <Text
-                className={`font-semibold ${
-                  tab === "global" ? "text-cyan-500" : "text-white"
-                }`}
-              >
-                Global
-              </Text>
-            </View>
-          </Pressable>
-
-          <Pressable
-            className={`flex-1 items-center pb-2 ${
-              tab === "weekly" ? "border-b-2 border-cyan-500" : ""
-            }`}
-            onPress={() => setTab("weekly")}
-          >
-            <View className="flex-row items-center">
-              <Text
-                className={`font-semibold ${
-                  tab === "monthly" ? "text-cyan-500" : "text-white"
-                }`}
-              >
-                Mensuel
-              </Text>
-            </View>
-          </Pressable>
-        </View>
-
-        {/* List of all users */}
-        <View className="px-4 py-6">
-          {sortedUsers.map((user, index) => {
-            const rank = index + 1;
-            const styles = getRankStyles(rank);
-
-            return (
-              <Animated.View
-                key={user.id}
-                entering={SlideInLeft.delay(index * 100).duration(400)}
-                className={rank <= 3 ? "mb-4" : "mb-2"}
-              >
-                <Card
-                  className={cn(
-                    "overflow-hidden",
-                    typeof styles.containerBg === "function"
-                      ? styles.containerBg(user)
-                      : styles.containerBg
-                  )}
-                >
-                  <CardContent
-                    className={cn(
-                      "p-3 flex-row items-center",
-                      rank === 1 ? "py-4" : rank <= 3 ? "py-3.5" : "py-3"
-                    )}
-                  >
-                    <View
-                      className={`${styles.numberBg} w-10 h-10 rounded-md items-center justify-center mr-3 border flex-row`}
-                    >
-                      <Text
-                        className={`font-bold ${
-                          typeof styles.textColor === "function"
-                            ? styles.textColor(user)
-                            : styles.textColor
-                        }`}
-                      >
-                        {rank}
-                      </Text>
-                    </View>
-
-                    <View className="flex-1">
-                      <Text
-                        className={`font-medium ${
-                          typeof styles.textColor === "function"
-                            ? styles.textColor(user)
-                            : styles.textColor
-                        }`}
-                      >
-                        {user.name} {user.isCurrentUser && "(Vous)"}
-                      </Text>
-                      <Text className="text-slate-400 text-xs">
-                        Niveau {user.level}
-                      </Text>
-                    </View>
-
-                    <View
-                      className={`flex-row items-center bg-slate-700 px-3 py-2 rounded-md border border-slate-600 `}
-                    >
-                      <Text
-                        className={`font-bold ${
-                          rank <= 3
-                            ? `${
-                                rank === 1
-                                  ? "text-yellow-400"
-                                  : rank === 2
-                                  ? "text-blue-400"
-                                  : "text-orange-400"
-                              }`
-                            : "text-white"
-                        }`}
-                      >
-                        {user.xp.toLocaleString() + " XP"}
-                      </Text>
-                    </View>
-                  </CardContent>
-                </Card>
-              </Animated.View>
-            );
-          })}
+            <TabsList className="flex-row w-full">
+              <TabsTrigger className="flex-1" value="global">
+                <Text>Global</Text>
+              </TabsTrigger>
+              <TabsTrigger className="flex-1" value="weekly">
+                <Text>Hebdo</Text>
+              </TabsTrigger>
+              <TabsTrigger className="flex-1" value="monthly">
+                <Text>Mensuel</Text>
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="global">
+              {leaderboards?.global.map((user, index) => {
+                return <UserRow key={user.id} user={user} index={index} />;
+              })}
+            </TabsContent>
+            <TabsContent value="weekly">
+              {leaderboards?.weekly.map((user, index) => {
+                return <UserRow key={user.id} user={user} index={index} />;
+              })}
+            </TabsContent>
+            <TabsContent value="monthly">
+              {leaderboards?.monthly.map((user, index) => {
+                return <UserRow key={user.id} user={user} index={index} />;
+              })}
+            </TabsContent>
+          </Tabs>
         </View>
       </ScrollView>
     </SafeAreaView>

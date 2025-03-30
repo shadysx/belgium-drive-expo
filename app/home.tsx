@@ -10,7 +10,6 @@ import {
   Target,
   BarChart3,
   Play,
-  Settings2,
   Award,
 } from "lucide-react-native";
 import { router } from "expo-router";
@@ -28,11 +27,11 @@ export default function HomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <ScrollView>
-        <View className="pb-4 px-4">
+        <View className="pb-4 px-2">
           <Header />
         </View>
 
-        <View className="px-4 gap-4">
+        <View className="px-2 gap-4">
           <Animated.View
             entering={FadeInDown.delay(350)}
             className="flex-row gap-4"
