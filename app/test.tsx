@@ -3,21 +3,19 @@ import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import { useGetQuestions } from "~/hooks/useQuery/useQuestions";
 import { useState } from "react";
-import { LevelUpDialog } from "~/components/quiz/LevelUpDialog";
+import { LevelUpDialog } from "~/components/shared/LevelUpDialog";
+import ProgressLoadingTest from "~/components/shared/AnimatedProgressBar";
 const Test = () => {
-  const [showLevelProgress, setShowLevelProgress] = useState(true);
+  const [showLevelProgress, setShowLevelProgress] = useState(false);
 
-  // Mock data pour test
   const mockProgressData = {
     previousXP: 0,
-    newXP: 1100,
+    newXP: 1500,
     previousLevel: 7,
     newLevel: 8,
-    xpRequiredForPreviousLevel: 1000,
     xpRequiredForNextLevel: 1200,
   };
 
-  const { data, isLoading, isError } = useGetQuestions();
   return (
     <SafeAreaView className="flex-1 bg-gradient-to-b from-primary/20 to-primary/5">
       <View className="border border-red-500 border-solid flex-1">

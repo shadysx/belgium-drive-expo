@@ -1,20 +1,19 @@
 import { View } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Progress } from "~/components/ui/progress";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import Animated, {
   FadeIn,
   FadeInDown,
-  withSpring,
-  withTiming,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
-  interpolate,
+  withSpring,
 } from "react-native-reanimated";
 import { useEffect } from "react";
 import { Trophy, Star } from "lucide-react-native";
+import AnimatedProgressBar from "./AnimatedProgressBar";
+import React from "react";
 
 interface LevelProgressProps {
   isOpen: boolean;
@@ -37,25 +36,21 @@ export function LevelUpDialog({
 }: LevelProgressProps) {
   const progress = useSharedValue((previousXP / xpRequiredForNextLevel) * 100);
   const scale = useSharedValue(1);
+  const [displayedLevel, setDisplayedLevel] = React.useState(previousLevel);
+
+  const progressStyle = useAnimatedStyle(() => ({
+    width: `${progress.value}%`,
+  }));
 
   useEffect(() => {
     if (isOpen) {
-      // Réinitialiser à l'ancienne valeur immédiatement
-      progress.value = (previousXP / xpRequiredForNextLevel) * 100;
-
-      // Attendre un peu avant de démarrer l'animation
-      // Animer vers la nouvelle valeur
-      progress.value = withTiming(50, {
-        duration: 1500,
-      });
-      console.log("newXP", newXP);
-      console.log("xpRequiredForNextLevel", xpRequiredForNextLevel);
-      console.log("progress.value", progress.value);
-      // progress.value = newXP / xpRequiredForNextLevel;
-
-      // Animation du level up si nécessaire
+      setDisplayedLevel(previousLevel);
       if (newLevel > previousLevel) {
-        scale.value = withSequence(withSpring(1.2), withSpring(1));
+        // On attend que la barre atteigne 100% avant de changer le niveau
+        setTimeout(() => {
+          setDisplayedLevel(newLevel);
+          scale.value = withSequence(withSpring(1.2), withSpring(1));
+        }, 2000); // Ajustez ce délai en fonction de la durée de votre animation de progression
       }
     }
   }, [isOpen]);
@@ -87,8 +82,8 @@ export function LevelUpDialog({
           style={scaleStyle}
           className="flex-row items-center justify-center gap-2 mb-6"
         >
-          <Text className="text-4xl font-bold">Niveau {newLevel}</Text>
-          {hasLeveledUp && (
+          <Text className="text-4xl font-bold">Niveau {displayedLevel}</Text>
+          {hasLeveledUp && displayedLevel === newLevel && (
             <Animated.View
               entering={FadeIn.delay(800)}
               className="bg-yellow-500/20 p-2 rounded-full"
@@ -99,13 +94,12 @@ export function LevelUpDialog({
         </Animated.View>
 
         <View className="mb-6">
-          <Animated.View>
-            <Progress
-              value={progress.value}
-              className="h-3 bg-secondary"
-              indicatorClassName="bg-primary"
-            />
-          </Animated.View>
+          <AnimatedProgressBar
+            currentXP={previousXP}
+            gainedXP={xpGained}
+            requiredXP={xpRequiredForNextLevel}
+            duration={3000}
+          />
           <View className="flex-row justify-between mt-2">
             <Text className="text-sm text-muted-foreground">{newXP} XP</Text>
             <Text className="text-sm text-muted-foreground">
