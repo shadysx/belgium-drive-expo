@@ -4,7 +4,7 @@ import { SERVER_BASE_URL } from "~/lib/constants";
 
 export const useGetUserInfo = () => {
   return useQuery({
-    queryKey: ["userInfo"],
+    queryKey: ["user-info"],
     queryFn: async () => {
       const cookies = authClient.getCookie();
       const headers = {

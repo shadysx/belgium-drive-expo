@@ -1,25 +1,18 @@
 import { View, SafeAreaView, ActivityIndicator } from "react-native";
-import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { useState, useMemo, useEffect } from "react";
-import { Image } from "react-native";
+import { useState, useMemo } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import Animated, { FadeInDown } from "react-native-reanimated";
-import QuizButtons from "~/components/quiz/QuizButtons";
-import { QuizQuestion } from "~/interfaces/quiz-question.interface";
-import QuizHeader from "~/components/quiz/QuizHeader";
-import { QuizType } from "~/enums/quiz-type.enum";
-import { NOTIFICATION_DELAY, SERVER_BASE_URL } from "~/lib/constants";
 import { QuizSubmission } from "~/interfaces/dto/quiz-submission.interface";
 import { QuizSubmissionElement } from "~/interfaces/dto/quiz-submission-element.interface";
 import { useSubmitQuiz } from "~/hooks/useQuery/useSubmitQuiz";
-import { useGetQuestions } from "~/hooks/useQuery/useQuestions";
 import { useQuizTimer } from "~/hooks/useQuizTimer";
 import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
 import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
 import { shuffleAnswers } from "~/lib/utils";
 import QuizViewer from "~/components/quiz/QuizViewer";
 import { useAchievementNotification } from "~/src/contexts/achievement-context";
+import { QuizType } from "~/enums/quiz-type.enum";
+import QuizHeader from "~/components/quiz/QuizHeader";
 
 const initialTimeLeft = 30;
 

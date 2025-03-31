@@ -114,14 +114,22 @@ export default function LeaderboardScreen() {
               })}
             </TabsContent>
             <TabsContent value="weekly">
-              {leaderboards?.weekly.map((user, index) => {
-                return <UserRow key={user.id} user={user} index={index} />;
-              })}
+              {leaderboards?.weekly && leaderboards?.weekly.length > 0 ? (
+                leaderboards?.weekly.map((user, index) => {
+                  return <UserRow key={user.id} user={user} index={index} />;
+                })
+              ) : (
+                <Text>Work in progress</Text>
+              )}
             </TabsContent>
             <TabsContent value="monthly">
-              {leaderboards?.monthly.map((user, index) => {
-                return <UserRow key={user.id} user={user} index={index} />;
-              })}
+              {leaderboards?.monthly && leaderboards?.monthly.length > 0 ? (
+                leaderboards?.monthly.map((user, index) => {
+                  return <UserRow key={user.id} user={user} index={index} />;
+                })
+              ) : (
+                <Text>Work in progress</Text>
+              )}
             </TabsContent>
           </Tabs>
         </View>

@@ -14,7 +14,7 @@ export default function AchievementsScreen() {
       <Header title="Trophées" />
 
       <ScrollView>
-        <View className="px-4">
+        <View className="px-2">
           <View className="gap-4">
             {userAchievements &&
               userAchievements.map((userAchievement, index) => (

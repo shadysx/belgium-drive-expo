@@ -10,7 +10,13 @@ import Animated, {
   ZoomIn,
   SlideInRight,
 } from "react-native-reanimated";
-import { CheckCircle2, XCircle, Clock, ArrowRight } from "lucide-react-native";
+import {
+  CheckCircle2,
+  XCircle,
+  Clock,
+  ArrowRight,
+  ChevronLeft,
+} from "lucide-react-native";
 import { formatFirebaseUrl, isPassed } from "~/lib/utils";
 
 export default function ResultsScreen() {
@@ -36,25 +42,27 @@ export default function ResultsScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
+    <SafeAreaView className="flex-1 bg-background">
       <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
-        <Animated.View
-          entering={FadeInDown.duration(500)}
-          className="px-6 pt-8"
-        >
-          <Text className="text-3xl font-bold mb-2">
-            {passed
-              ? "Réussi, félicitations ! 🎉"
-              : "Raté, continue tes efforts ! 💪"}
-          </Text>
-          <Text className="text-base text-muted-foreground mb-6">
-            Tu as répondu à {result.quizResultElements.length} questions
-          </Text>
+        <Animated.View entering={FadeInDown.duration(500)} className="px-6">
+          <View className="flex-row items-center gap-2">
+            <Pressable onPress={() => router.back()}>
+              <ChevronLeft
+                size={32}
+                className={passed ? "text-green-500" : "text-red-500"}
+              />
+            </Pressable>
+            <Text className="text-3xl font-bold">
+              {passed
+                ? "Réussi, félicitations ! 🎉"
+                : "Raté, continue tes efforts ! 💪"}
+            </Text>
+          </View>
         </Animated.View>
 
         <Animated.View
           entering={ZoomIn.duration(800).delay(300)}
-          className="items-center mb-8"
+          className="items-center m-8"
         >
           <View
             className={`
@@ -192,25 +200,7 @@ export default function ResultsScreen() {
                         )}
                       </View>
                       <CardContent className="p-2">
-                        <View className="flex-row items-center justify-between">
-                          {element.userAnswerIndex ===
-                          element.question.answerIndex ? (
-                            <CheckCircle2
-                              size={16}
-                              className="text-green-500"
-                            />
-                          ) : element.userAnswerIndex === null ? (
-                            <Clock size={16} className="text-yellow-500" />
-                          ) : (
-                            <XCircle
-                              size={16}
-                              className={`${
-                                element.question.isSerious
-                                  ? "text-red-600"
-                                  : "text-red-500"
-                              }`}
-                            />
-                          )}
+                        <View className="flex-row items-center justify-end">
                           <ArrowRight
                             size={12}
                             className="text-muted-foreground"
@@ -223,12 +213,6 @@ export default function ResultsScreen() {
               ))}
             </View>
           </View>
-        </View>
-
-        <View className="px-6 pb-8">
-          <Button onPress={() => router.push("/home")} size="lg">
-            <Text>Retour à l'accueil</Text>
-          </Button>
         </View>
       </ScrollView>
     </SafeAreaView>

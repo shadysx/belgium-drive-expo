@@ -28,7 +28,16 @@ export const useSubmitQuiz = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["stats", "user-achievements", "user-info", "leaderboards"],
+        queryKey: ["user-achievements"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["user-info"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["leaderboards"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["stats"],
       });
     },
   });

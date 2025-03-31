@@ -111,6 +111,7 @@ export default function RootLayout() {
               name="quiz-view"
               options={{
                 title: "Détail de la question",
+                headerShown: false,
               }}
             />
             <Stack.Screen
@@ -131,6 +132,13 @@ export default function RootLayout() {
               name="leaderboards"
               options={{
                 title: "Classements",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="stats"
+              options={{
+                title: "Statistiques",
                 headerShown: false,
               }}
             />

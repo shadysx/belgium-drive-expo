@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View className="pb-4 px-2">
           <Header />
         </View>
@@ -83,7 +83,7 @@ export default function HomeScreen() {
             <CardButton
               icon={<BarChart3 size={24} />}
               text="Statistiques"
-              onPress={() => router.push("/history")}
+              onPress={() => router.push("/stats")}
             />
 
             <CardButton
