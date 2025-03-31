@@ -4,16 +4,34 @@ import { Button } from "~/components/ui/button";
 import { useGetQuestions } from "~/hooks/useQuery/useQuestions";
 import { useState } from "react";
 import { LevelUpDialog } from "~/components/shared/LevelUpDialog";
-import ProgressLoadingTest from "~/components/shared/AnimatedProgressBar";
+import ProgressLoadingTest from "~/components/shared/LevelProgressBar";
 const Test = () => {
   const [showLevelProgress, setShowLevelProgress] = useState(false);
 
   const mockProgressData = {
     previousXP: 0,
-    newXP: 1500,
+    newXP: 2000,
     previousLevel: 7,
     newLevel: 8,
-    xpRequiredForNextLevel: 1200,
+  };
+  const levelMap = {
+    1: 100,
+    2: 200,
+    3: 300,
+    4: 400,
+    5: 500,
+    6: 600,
+    7: 700,
+    8: 800,
+    9: 900,
+    10: 1000,
+    11: 1100,
+    12: 1200,
+    13: 1300,
+    14: 1400,
+    15: 1500,
+    16: 1600,
+    17: 1700,
   };
 
   return (
@@ -29,6 +47,7 @@ const Test = () => {
           isOpen={showLevelProgress}
           onClose={() => setShowLevelProgress(false)}
           {...mockProgressData}
+          levelMap={levelMap}
         />
       </View>
     </SafeAreaView>
