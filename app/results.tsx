@@ -44,7 +44,10 @@ export default function ResultsScreen() {
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView className="flex-1 " showsVerticalScrollIndicator={false}>
-        <Animated.View entering={FadeInDown.duration(500)} className="px-6">
+        <Animated.View
+          entering={FadeInDown.duration(500)}
+          className="mr-16 ml-4 mt-4"
+        >
           <View className="flex-row items-center gap-2">
             <Pressable onPress={() => router.back()}>
               <ChevronLeft
@@ -52,7 +55,11 @@ export default function ResultsScreen() {
                 className={passed ? "text-green-500" : "text-red-500"}
               />
             </Pressable>
-            <Text className="text-3xl font-bold">
+            <Text
+              className="text-3xl font-bold"
+              numberOfLines={1}
+              adjustsFontSizeToFit
+            >
               {passed
                 ? "Réussi, félicitations ! 🎉"
                 : "Raté, continue tes efforts ! 💪"}

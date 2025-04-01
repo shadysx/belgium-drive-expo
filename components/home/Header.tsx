@@ -2,9 +2,7 @@ import { View, Pressable, Image } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Progress } from "~/components/ui/progress";
 import { Card } from "~/components/ui/card";
-import { ThemeToggle } from "~/components/ThemeToggle";
 import { authClient } from "~/lib/auth-client";
-import { useNavigation } from "@react-navigation/native";
 import { HeaderMenu } from "./HeaderMenu";
 import { useGetUserInfo } from "~/hooks/useQuery/useUserInfo";
 
