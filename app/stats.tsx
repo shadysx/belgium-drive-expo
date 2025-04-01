@@ -19,7 +19,6 @@ import { isPassed } from "~/lib/utils";
 export default function StatsScreen() {
   const { data } = useGetQuizResults(10000);
   const allResults = data?.pages.flatMap((page) => page.results) ?? [];
-  console.log(allResults);
 
   const totalQuizzes = allResults.length;
   const totalQuestions = allResults.reduce(

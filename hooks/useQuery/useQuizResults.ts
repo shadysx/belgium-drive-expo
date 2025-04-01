@@ -28,7 +28,6 @@ export const useGetQuizResults = (limit: number = 10) => {
       const response = await fetch(url.toString(), {
         headers,
       });
-      console.log(response);
 
       if (!response.ok) {
         throw new Error("Failed to fetch quiz results");

@@ -102,10 +102,6 @@ export default function QuizScreen() {
           );
         }
 
-        console.log(
-          "result.progressData",
-          JSON.stringify(result.progressData, null, 2)
-        );
         showProgressDialog(result.progressData);
 
         router.replace({

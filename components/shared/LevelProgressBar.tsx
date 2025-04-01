@@ -41,7 +41,9 @@ export default function LevelProgressBar({
     return levelMap[level] || Infinity;
   };
 
-  const animateNextLevel = () => {
+  const levelMax = Object.keys(levelMap).length;
+
+  const animateNextLevel = (alreadyLoaded: boolean = false) => {
     const requiredXPForCurrentLvl = getRequiredXPForCurrentLevel(
       currentLevelRef.value
     );
@@ -71,32 +73,34 @@ export default function LevelProgressBar({
             remainingXP.value =
               remainingXP.value - (requiredXPForCurrentLvl - currentLevelXP);
 
-            runOnJS(animateNextLevel)();
+            if (currentLevelRef.value <= levelMax) {
+              runOnJS(animateNextLevel)();
+            } else {
+              progress.value = 100;
+            }
           }
         }
       );
     } else {
       // Final animation with the remaining XP
-      if (requiredXPForCurrentLvl === Infinity) {
-        progress.value = withTiming(100, {
-          duration: duration / 2,
-        });
-      } else {
-        const finalPercentage =
-          ((currentLevelXP + remainingXP.value) / requiredXPForCurrentLvl) *
-          100;
-        progress.value = withTiming(finalPercentage, {
-          duration: duration / 2,
-        });
-      }
+      const finalPercentage =
+        ((currentLevelXP + remainingXP.value) / requiredXPForCurrentLvl) * 100;
+      progress.value = withTiming(finalPercentage, {
+        duration: duration / 2,
+      });
     }
   };
 
   useEffect(() => {
-    remainingXP.value = xpGained;
-    currentLevelRef.value = previousLevel;
-    previousXPTemp.value = previousXP;
-    animateNextLevel();
+    const keys = Object.keys(levelMap).map(Number);
+    if (previousLevel === keys[keys.length - 1]) {
+      animateNextLevel();
+    } else {
+      remainingXP.value = xpGained;
+      currentLevelRef.value = previousLevel;
+      previousXPTemp.value = previousXP;
+      animateNextLevel();
+    }
   }, [previousXP, xpGained, previousLevel, levelMap]);
 
   return (

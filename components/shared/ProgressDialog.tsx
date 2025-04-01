@@ -50,6 +50,8 @@ export function ProgressDialog({
   const [displayedLevel, setDisplayedLevel] = useState<number>(previousLevel);
   const scale = useSharedValue(1);
 
+  const maxLevel = Object.keys(levelMap).length;
+
   const handleLevelUp = () => {
     if (displayedLevel < newLevel) {
       setDisplayedLevel((prev) => prev + 1);
@@ -90,7 +92,9 @@ export function ProgressDialog({
           style={scaleStyle}
           className="flex-row items-center justify-center gap-2 mb-6"
         >
-          <Text className="text-4xl font-bold">Niveau {displayedLevel}</Text>
+          <Text className="text-4xl font-bold">
+            Niveau {displayedLevel > maxLevel ? "Max " : displayedLevel}
+          </Text>
           {hasLeveledUp && displayedLevel === newLevel && (
             <Animated.View
               entering={FadeIn.delay(800)}
