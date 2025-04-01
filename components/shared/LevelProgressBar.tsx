@@ -37,21 +37,21 @@ export default function LevelProgressBar({
     width: `${progress.value}%`,
   }));
 
-  const getRequiredXPForNextLevel = (level: number) => {
-    return levelMap[level + 1] || Infinity;
+  const getRequiredXPForCurrentLevel = (level: number) => {
+    return levelMap[level] || Infinity;
   };
 
   const animateNextLevel = () => {
-    const requiredXPForNextLvl = getRequiredXPForNextLevel(
+    const requiredXPForCurrentLvl = getRequiredXPForCurrentLevel(
       currentLevelRef.value
     );
 
-    const currentLevelXP = previousXPTemp.value % requiredXPForNextLvl;
+    const currentLevelXP = previousXPTemp.value;
 
     // Calculate the initial percentage for the current level
-    progress.value = (currentLevelXP / requiredXPForNextLvl) * 100;
+    progress.value = (currentLevelXP / requiredXPForCurrentLvl) * 100;
 
-    if (remainingXP.value + currentLevelXP >= requiredXPForNextLvl) {
+    if (remainingXP.value + currentLevelXP >= requiredXPForCurrentLvl) {
       // Animation until 100%
       progress.value = withTiming(
         100,
@@ -69,7 +69,7 @@ export default function LevelProgressBar({
             previousXPTemp.value = 0;
 
             remainingXP.value =
-              remainingXP.value - (requiredXPForNextLvl - currentLevelXP);
+              remainingXP.value - (requiredXPForCurrentLvl - currentLevelXP);
 
             runOnJS(animateNextLevel)();
           }
@@ -77,13 +77,14 @@ export default function LevelProgressBar({
       );
     } else {
       // Final animation with the remaining XP
-      if (requiredXPForNextLvl === Infinity) {
+      if (requiredXPForCurrentLvl === Infinity) {
         progress.value = withTiming(100, {
           duration: duration / 2,
         });
       } else {
         const finalPercentage =
-          ((currentLevelXP + remainingXP.value) / requiredXPForNextLvl) * 100;
+          ((currentLevelXP + remainingXP.value) / requiredXPForCurrentLvl) *
+          100;
         progress.value = withTiming(finalPercentage, {
           duration: duration / 2,
         });
@@ -92,8 +93,8 @@ export default function LevelProgressBar({
   };
 
   useEffect(() => {
-    remainingXP.value = xpGained; // 100XP
-    currentLevelRef.value = previousLevel; // 2
+    remainingXP.value = xpGained;
+    currentLevelRef.value = previousLevel;
     previousXPTemp.value = previousXP;
     animateNextLevel();
   }, [previousXP, xpGained, previousLevel, levelMap]);
