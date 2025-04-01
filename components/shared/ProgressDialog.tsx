@@ -15,26 +15,39 @@ import { Trophy, Star } from "lucide-react-native";
 import LevelProgressBar from "./LevelProgressBar";
 import React from "react";
 
-interface LevelProgressProps {
+interface ProgressDialogProps {
   isOpen: boolean;
   onClose: () => void;
   previousXP: number;
-  newXP: number;
+  xpGained: number;
   previousLevel: number;
   newLevel: number;
-  levelMap: Record<number, number>;
+  newXP: number;
 }
 
-export function LevelUpDialog({
+const levelMap: Record<number, number> = {
+  1: 0,
+  2: 100,
+  3: 200,
+  4: 300,
+  5: 400,
+  6: 500,
+  7: 600,
+  8: 700,
+  9: 800,
+  10: 900,
+};
+
+export function ProgressDialog({
   isOpen,
   onClose,
   previousXP,
-  newXP,
+  xpGained,
   previousLevel,
   newLevel,
-  levelMap,
-}: LevelProgressProps) {
-  const [displayedLevel, setDisplayedLevel] = useState(previousLevel);
+  newXP,
+}: ProgressDialogProps) {
+  const [displayedLevel, setDisplayedLevel] = useState<number>(previousLevel);
   const scale = useSharedValue(1);
 
   const handleLevelUp = () => {
@@ -46,6 +59,7 @@ export function LevelUpDialog({
 
   useEffect(() => {
     if (isOpen) {
+      console.log(" displaying previousLevel", previousLevel);
       setDisplayedLevel(previousLevel);
     }
   }, [isOpen]);
@@ -54,8 +68,9 @@ export function LevelUpDialog({
     transform: [{ scale: scale.value }],
   }));
 
-  const xpGained = newXP - previousXP;
   const hasLeveledUp = newLevel > previousLevel;
+  const duration = 3000;
+  const lastLevelDuration = ((newLevel - previousLevel) * duration) / 2;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -93,18 +108,26 @@ export function LevelUpDialog({
             xpGained={xpGained}
             previousLevel={previousLevel}
             levelMap={levelMap}
-            duration={3000}
             onLevelUp={handleLevelUp}
+            duration={duration}
           />
-          <View className="mt-2">
+          <View className="mt-2 flex-row justify-between">
             <Text className="text-sm text-muted-foreground text-right">
-              {levelMap[displayedLevel + 1] || Infinity} XP
+              0 XP
+            </Text>
+            <Text className="text-sm text-muted-foreground text-right">
+              {displayedLevel === 10
+                ? "Niveau max"
+                : `${levelMap[displayedLevel + 1]} XP`}
             </Text>
           </View>
         </View>
 
         {hasLeveledUp && (
-          <Animated.View entering={FadeInDown.delay(3000)} className="mb-6">
+          <Animated.View
+            entering={FadeInDown.delay(lastLevelDuration)}
+            className="mb-6"
+          >
             <Text className="text-center text-lg font-semibold">
               Félicitations ! Vous avez atteint le niveau {newLevel} ! 🎉
             </Text>

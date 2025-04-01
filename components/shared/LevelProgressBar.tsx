@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 interface AnimatedProgressBarProps {
-  duration?: number;
+  duration: number;
   height?: number;
   backgroundColor?: string;
   previousXP: number;
@@ -19,7 +19,7 @@ interface AnimatedProgressBarProps {
 }
 
 export default function LevelProgressBar({
-  duration = 2000,
+  duration,
   height = 16,
   backgroundColor = "#e0e0e0",
   previousXP,
@@ -28,6 +28,7 @@ export default function LevelProgressBar({
   levelMap,
   onLevelUp,
 }: AnimatedProgressBarProps) {
+  const previousXPTemp = useSharedValue(previousXP);
   const progress = useSharedValue(0);
   const remainingXP = useSharedValue(xpGained);
   const currentLevelRef = useSharedValue(previousLevel);
@@ -36,52 +37,64 @@ export default function LevelProgressBar({
     width: `${progress.value}%`,
   }));
 
-  useEffect(() => {
-    const getRequiredXPForLevel = (level: number) => {
-      return levelMap[level] || Infinity;
-    };
+  const getRequiredXPForNextLevel = (level: number) => {
+    return levelMap[level + 1] || Infinity;
+  };
 
-    const animateNextLevel = () => {
-      const currentValue = remainingXP.value;
-      const requiredXP = getRequiredXPForLevel(currentLevelRef.value);
-      const currentLevelXP = previousXP % requiredXP;
+  const animateNextLevel = () => {
+    const requiredXPForNextLvl = getRequiredXPForNextLevel(
+      currentLevelRef.value
+    );
 
-      // Calculer le pourcentage initial pour le niveau actuel
-      progress.value = (currentLevelXP / requiredXP) * 100;
+    const currentLevelXP = previousXPTemp.value % requiredXPForNextLvl;
 
-      if (currentValue + currentLevelXP >= requiredXP) {
-        // Animation jusqu'à 100%
-        progress.value = withTiming(
-          100,
-          {
-            duration: duration / 2,
-          },
-          (finished) => {
-            if (finished) {
-              if (onLevelUp) {
-                runOnJS(onLevelUp)();
-              }
-              // Passer au niveau suivant
-              currentLevelRef.value += 1;
-              // Calculer l'XP restant pour le prochain niveau
-              remainingXP.value = currentValue - (requiredXP - currentLevelXP);
-              progress.value = 0;
-              runOnJS(animateNextLevel)();
+    // Calculate the initial percentage for the current level
+    progress.value = (currentLevelXP / requiredXPForNextLvl) * 100;
+
+    if (remainingXP.value + currentLevelXP >= requiredXPForNextLvl) {
+      // Animation until 100%
+      progress.value = withTiming(
+        100,
+        {
+          duration: duration / 2,
+        },
+        (finished) => {
+          if (finished) {
+            if (onLevelUp) {
+              runOnJS(onLevelUp)();
             }
+            // Pass to the next level
+            currentLevelRef.value += 1;
+            progress.value = 0;
+            previousXPTemp.value = 0;
+
+            remainingXP.value =
+              remainingXP.value - (requiredXPForNextLvl - currentLevelXP);
+
+            runOnJS(animateNextLevel)();
           }
-        );
+        }
+      );
+    } else {
+      // Final animation with the remaining XP
+      if (requiredXPForNextLvl === Infinity) {
+        progress.value = withTiming(100, {
+          duration: duration / 2,
+        });
       } else {
-        // Animation finale avec le XP restant
         const finalPercentage =
-          ((currentLevelXP + currentValue) / requiredXP) * 100;
+          ((currentLevelXP + remainingXP.value) / requiredXPForNextLvl) * 100;
         progress.value = withTiming(finalPercentage, {
           duration: duration / 2,
         });
       }
-    };
+    }
+  };
 
-    remainingXP.value = xpGained;
-    currentLevelRef.value = previousLevel;
+  useEffect(() => {
+    remainingXP.value = xpGained; // 100XP
+    currentLevelRef.value = previousLevel; // 2
+    previousXPTemp.value = previousXP;
     animateNextLevel();
   }, [previousXP, xpGained, previousLevel, levelMap]);
 

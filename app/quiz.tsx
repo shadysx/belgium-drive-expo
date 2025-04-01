@@ -10,9 +10,10 @@ import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
 import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
 import { shuffleAnswers } from "~/lib/utils";
 import QuizViewer from "~/components/quiz/QuizViewer";
-import { useAchievementNotification } from "~/src/contexts/achievement-context";
+import { useAchievementNotification } from "~/src/contexts/achievement-notification.context";
 import { QuizType } from "~/enums/quiz-type.enum";
 import QuizHeader from "~/components/quiz/QuizHeader";
+import { useProgressDialog } from "~/src/contexts/progress-dialog.context";
 
 const initialTimeLeft = 30;
 
@@ -53,6 +54,7 @@ export default function QuizScreen() {
   const questionsLength = questions?.length ?? 0;
 
   const { showAchievement } = useAchievementNotification();
+  const { showProgressDialog } = useProgressDialog();
   const submitQuizMutation = useSubmitQuiz();
   const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () => {
     handleAnswer();
@@ -94,9 +96,17 @@ export default function QuizScreen() {
       } else {
         const result = await submitQuizMutation.mutateAsync(quizSubmission);
 
-        if (result.completedUserAchievements.length > 0) {
-          showAchievement(result.completedUserAchievements[0].achievement);
+        if (result.progressData.completedUserAchievements.length > 0) {
+          showAchievement(
+            result.progressData.completedUserAchievements[0].achievement
+          );
         }
+
+        console.log(
+          "result.progressData",
+          JSON.stringify(result.progressData, null, 2)
+        );
+        showProgressDialog(result.progressData);
 
         router.replace({
           pathname: "/results",
