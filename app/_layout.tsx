@@ -20,6 +20,15 @@ import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AchievementProvider } from "~/src/contexts/achievement-notification.context";
 import { ProgressDialogProvider } from "~/src/contexts/progress-dialog.context";
+import mobileAds from "react-native-google-mobile-ads";
+
+mobileAds()
+  .initialize()
+  .then((adapterStatuses) => {
+    adapterStatuses.forEach((adapterStatus) => {
+      console.log("adapterStatus", adapterStatus);
+    });
+  });
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,

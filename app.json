@@ -13,9 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.shadysxcode.belgium-drive"
@@ -32,7 +30,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-8230913386935751~9205115170",
+          "iosAppId": "ca-app-pub-8230913386935751~9205115170"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

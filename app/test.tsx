@@ -5,6 +5,7 @@ import { useGetQuestions } from "~/hooks/useQuery/useQuestions";
 import { useState } from "react";
 import { ProgressDialog } from "~/components/shared/ProgressDialog";
 import ProgressLoadingTest from "~/components/shared/LevelProgressBar";
+import { RewardedAdButton } from "~/components/shared/AddMob";
 const Test = () => {
   const [showLevelProgress, setShowLevelProgress] = useState(false);
 
@@ -30,6 +31,11 @@ const Test = () => {
           {...mockProgressData}
           // levelMap={levelMap}
         /> */}
+        <RewardedAdButton
+          onReward={() => {
+            console.log("rewarded");
+          }}
+        />
       </View>
     </SafeAreaView>
   );
