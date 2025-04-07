@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.shadysxcode.belgiumdrive"
     },
     "web": {
       "bundler": "metro",
@@ -34,7 +35,7 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-8230913386935751~9205115170",
+          "androidAppId": "ca-app-pub-8230913386935751~9488563501",
           "iosAppId": "ca-app-pub-8230913386935751~9205115170"
         }
       ]

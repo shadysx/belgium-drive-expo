@@ -1,4 +1,4 @@
-import { View, SafeAreaView, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { Text } from "~/components/ui/text";
 import { useState, useMemo } from "react";
 import { router, useLocalSearchParams } from "expo-router";
@@ -14,6 +14,7 @@ import { useAchievementNotification } from "~/src/contexts/achievement-notificat
 import { QuizType } from "~/enums/quiz-type.enum";
 import QuizHeader from "~/components/quiz/QuizHeader";
 import { useProgressDialog } from "~/src/contexts/progress-dialog.context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const initialTimeLeft = 30;
 
@@ -136,7 +137,7 @@ export default function QuizScreen() {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
       <View className="px-2 flex-1">
         <View className="flex-1">
           <View className="mb-4">

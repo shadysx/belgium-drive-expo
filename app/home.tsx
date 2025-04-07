@@ -3,15 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import {
-  Car,
-  Trophy,
-  History,
-  Target,
-  BarChart3,
-  Play,
-  Award,
-} from "lucide-react-native";
+import { Car, Play } from "lucide-react-native";
 import { router } from "expo-router";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetThemesWithQuestions } from "~/hooks/useQuery/useThemes";
@@ -19,6 +11,7 @@ import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
 import ContrastedCardButton from "~/components/home/ContrastedCardButton";
 import CardButton from "~/components/home/CardButton";
+import { History, Trophy, BarChart3, Award, Target } from "~/lib/icons";
 import { Header } from "~/components/home/Header";
 
 export default function HomeScreen() {
@@ -26,12 +19,15 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View className="pb-4 px-2">
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <View className="pb-4 px-2 flex-shrink-0">
           <Header />
         </View>
 
-        <View className="px-2 gap-4">
+        <View className="px-2 gap-4 flex-1">
           <Animated.View
             entering={FadeInDown.delay(350)}
             className="flex-row gap-4"
@@ -53,7 +49,7 @@ export default function HomeScreen() {
             />
 
             <CardButton
-              icon={<Target size={24} />}
+              icon={<Target size={24} className="text-primary" />}
               text="Examen personnalisé"
               onPress={() => router.push("/custom-quiz-settings")}
             />
@@ -64,13 +60,13 @@ export default function HomeScreen() {
             className="flex-row gap-4"
           >
             <CardButton
-              icon={<History size={24} />}
+              icon={<History size={24} className="text-primary" />}
               text="Historique"
               onPress={() => router.push("/history")}
             />
 
             <CardButton
-              icon={<Trophy size={24} />}
+              icon={<Trophy size={24} className="text-primary" />}
               text="Trophées"
               onPress={() => router.push("/achievements")}
             />
@@ -81,13 +77,13 @@ export default function HomeScreen() {
             className="flex-row gap-4"
           >
             <CardButton
-              icon={<BarChart3 size={24} />}
+              icon={<BarChart3 size={24} className="text-primary" />}
               text="Statistiques"
               onPress={() => router.push("/stats")}
             />
 
             <CardButton
-              icon={<Award size={24} />}
+              icon={<Award size={24} className="text-primary" />}
               text="Classements"
               onPress={() => router.push("/leaderboards")}
             />

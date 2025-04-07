@@ -21,7 +21,7 @@ export function Header() {
       : `${currentLvlXP} / ${xpRequiredToLevelUp} XP`;
 
   return (
-    <View>
+    <View className="max-h-48">
       <Card className="p-3">
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center flex-1">

@@ -7,13 +7,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Pressable, View } from "react-native";
 import { cn } from "~/lib/utils";
-import { Menu } from "~/lib/icons/Menu";
 import { Text } from "~/components/ui/text";
 import { authClient } from "~/lib/auth-client";
 import { useRouter } from "expo-router";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { useColorScheme } from "~/lib/useColorScheme";
-import { Settings2, MoonStar, LogOut, Sun } from "~/lib/icons";
+import { Settings2, MoonStar, LogOut, Sun, Menu } from "~/lib/icons";
 
 export function HeaderMenu() {
   const { signOut } = authClient;

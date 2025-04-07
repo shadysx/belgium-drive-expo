@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 export const NAV_THEME = {
   light: {
     background: "hsl(0 0% 100%)", // background
@@ -17,8 +19,10 @@ export const NAV_THEME = {
   },
 };
 
-// export const SERVER_BASE_URL = "http://localhost:3000";
-export const SERVER_BASE_URL = "http://192.168.0.123:3000";
+export const SERVER_BASE_URL = Platform.select({
+  ios: "http://localhost:3000",
+  android: "http://10.0.2.2:3000",
+});
 
 export const NOTIFICATION_DELAY = 5000;
 

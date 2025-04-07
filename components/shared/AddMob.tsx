@@ -18,7 +18,15 @@ const rewarded = RewardedAd.createForAdRequest(rewardedAdUnitId, {
   requestNonPersonalizedAdsOnly: true,
 });
 
-export function RewardedAdButton({ onReward, title = "Watch Ad for Reward" }) {
+interface RewardedAdButtonProps {
+  onReward?: (reward: { amount: number; type: string }) => void;
+  title?: string;
+}
+
+export function RewardedAdButton({
+  onReward,
+  title = "Watch Ad for Reward",
+}: RewardedAdButtonProps) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -37,7 +45,6 @@ export function RewardedAdButton({ onReward, title = "Watch Ad for Reward" }) {
       }
     );
 
-    // Start loading the rewarded ad
     rewarded.load();
 
     // Unsubscribe from events on unmount
@@ -47,18 +54,16 @@ export function RewardedAdButton({ onReward, title = "Watch Ad for Reward" }) {
     };
   }, [onReward]);
 
-  return (
-    <Button
-      title={title}
-      disabled={!loaded}
-      onPress={() => {
-        if (loaded) {
-          rewarded.show();
-          setLoaded(false); // Reset loaded state after showing
-        }
-      }}
-    />
-  );
+  const handleShowAd = () => {
+    if (loaded) {
+      setTimeout(() => {
+        rewarded.show();
+        setLoaded(false);
+      }, 500);
+    }
+  };
+
+  return <Button title={title} disabled={!loaded} onPress={handleShowAd} />;
 }
 
 export function BannerAdComponent() {

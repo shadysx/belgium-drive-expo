@@ -269,7 +269,7 @@ PODS:
   - FBLazyVector (0.76.7)
   - fmt (9.1.0)
   - glog (0.3.5)
-  - Google-Mobile-Ads-SDK (12.2.0):
+  - Google-Mobile-Ads-SDK (11.13.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleUserMessagingPlatform (2.7.0)
   - hermes-engine (0.76.7):
@@ -1869,10 +1869,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNGoogleMobileAds (15.0.0):
+  - RNGoogleMobileAds (14.7.2):
     - DoubleConversion
     - glog
-    - Google-Mobile-Ads-SDK (= 12.2.0)
+    - Google-Mobile-Ads-SDK (= 11.13.0)
     - GoogleUserMessagingPlatform (= 2.7.0)
     - hermes-engine
     - RCT-Folly (= 2024.01.01.00)
@@ -2393,7 +2393,7 @@ SPEC CHECKSUMS:
   FBLazyVector: ca8044c9df513671c85167838b4188791b6f37e1
   fmt: 10c6e61f4be25dc963c36bd73fc7b1705fe975be
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
-  Google-Mobile-Ads-SDK: 1dfb0c3cb46c7e2b00b0f4de74a1e06d9ea25d67
+  Google-Mobile-Ads-SDK: 14f57f2dc33532a24db288897e26494640810407
   GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
   hermes-engine: eb4a80f6bf578536c58a44198ec93a30f6e69218
   libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
@@ -2456,7 +2456,7 @@ SPEC CHECKSUMS:
   ReactCodegen: e1c019dc68733dd2c5d3b263b4a6dc72002c0045
   ReactCommon: 81e0744ee33adfd6d586141b927024f488bc49ea
   RNFlashList: 4a5af211faa1c3bcbaac7d3debd147008ac1abca
-  RNGoogleMobileAds: 7206ed77fa6f10f2862115319eb316c60037083b
+  RNGoogleMobileAds: 84807fb00efbc3325a1ae6372586b6a49470a4b6
   RNReanimated: a2692304a6568bc656c04c8ffea812887d37436e
   RNScreens: 351f431ef2a042a1887d4d90e1c1024b8ae9d123
   RNSVG: 030717ff82ea8f2117347c2fcf52a2d1eafba9ba
