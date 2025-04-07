@@ -1,7 +1,6 @@
 import { View, ScrollView, Image, Dimensions, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { useLocalSearchParams, router } from "expo-router";
 import { QuizResult } from "~/interfaces/quiz-result.interface";
@@ -10,13 +9,8 @@ import Animated, {
   ZoomIn,
   SlideInRight,
 } from "react-native-reanimated";
-import {
-  CheckCircle2,
-  XCircle,
-  Clock,
-  ArrowRight,
-  ChevronLeft,
-} from "lucide-react-native";
+import { CheckCircle2, XCircle, Clock, ArrowRight } from "~/lib/icons";
+import { ChevronLeft } from "~/lib/icons";
 import { formatFirebaseUrl, isPassed } from "~/lib/utils";
 
 export default function ResultsScreen() {
@@ -50,10 +44,7 @@ export default function ResultsScreen() {
         >
           <View className="flex-row items-center gap-2">
             <Pressable onPress={() => router.back()}>
-              <ChevronLeft
-                size={32}
-                className={passed ? "text-green-500" : "text-red-500"}
-              />
+              <ChevronLeft size={32} className="text-primary" />
             </Pressable>
             <Text
               className="text-3xl font-bold"
@@ -208,10 +199,7 @@ export default function ResultsScreen() {
                       </View>
                       <CardContent className="p-2">
                         <View className="flex-row items-center justify-end">
-                          <ArrowRight
-                            size={12}
-                            className="text-muted-foreground"
-                          />
+                          <ArrowRight size={12} className="text-primary" />
                         </View>
                       </CardContent>
                     </Card>

@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { Car, Play } from "lucide-react-native";
+import { Car } from "lucide-react-native";
 import { router } from "expo-router";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetThemesWithQuestions } from "~/hooks/useQuery/useThemes";
@@ -11,7 +11,7 @@ import { ThemeWithQuestions } from "~/interfaces/theme.interface";
 import { formatName } from "~/lib/utils";
 import ContrastedCardButton from "~/components/home/ContrastedCardButton";
 import CardButton from "~/components/home/CardButton";
-import { History, Trophy, BarChart3, Award, Target } from "~/lib/icons";
+import { History, Trophy, BarChart3, Award, Target, Play } from "~/lib/icons";
 import { Header } from "~/components/home/Header";
 
 export default function HomeScreen() {

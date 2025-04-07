@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+import { ChevronLeft } from "~/lib/icons";
 import { Pressable, View } from "react-native";
 import { Text } from "../ui/text";
 
@@ -17,7 +17,7 @@ export const Header = (props: HeaderProps) => {
         onPress={() => router.back()}
         className="w-10 h-10 items-center justify-center rounded-full active:opacity-70"
       >
-        <ChevronLeft size={24} className="text-foreground" />
+        <ChevronLeft size={24} className="text-primary" />
       </Pressable>
       <View className="flex-1 items-center">
         <Text className="text-xl font-semibold">{title}</Text>
