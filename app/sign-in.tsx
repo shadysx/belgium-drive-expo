@@ -18,6 +18,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React from "react";
 import { signInFormSchema, SignInFormData } from "~/lib/forms/sign-in.form";
 import ErrorText from "~/components/shared/ErrorText";
+import { SERVER_BASE_URL } from "~/lib/constants";
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +40,7 @@ const SignIn = () => {
   const onSubmit = async (data: SignInFormData) => {
     try {
       setIsLoading(true);
+      console.log("Server base url", SERVER_BASE_URL);
       await authClient.signIn.email(
         {
           email: data.email,

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Belgium Drive",
     "slug": "belgium-drive",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "belgium-drive",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shadysxcode.belgiumdrive"
+      "package": "com.shadycode.belgiumdrive"
     },
     "web": {
       "bundler": "metro",

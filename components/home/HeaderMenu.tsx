@@ -81,9 +81,9 @@ export function HeaderMenu() {
             />
             <Text className="text-foreground">Déconnexion</Text>
           </DropdownMenuItem>
-          <DropdownMenuItem onPress={() => router.push("/test")}>
+          {/* <DropdownMenuItem onPress={() => router.push("/test")}>
             <Text>Test</Text>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

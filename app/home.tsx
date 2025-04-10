@@ -94,37 +94,47 @@ export default function HomeScreen() {
             <Text className="text-lg font-semibold mb-3">Catégories</Text>
 
             <View className="gap-3">
-              {themes?.map((theme: ThemeWithQuestions) => (
-                <Pressable
-                  key={theme.id}
-                  onPress={() => {
-                    router.push({
-                      pathname: "/quiz",
-                      params: {
-                        quizRequest: JSON.stringify({
-                          length: theme.questions.length,
-                          theme: theme.name,
-                        }),
-                        quizType: JSON.stringify(QuizType.PREDEFINED),
-                      },
-                    });
-                  }}
-                >
-                  <Card>
-                    <CardContent className="flex-row items-center p-4">
-                      <View className="flex-1">
-                        <Text className="font-medium">
-                          {formatName(theme.name)}
-                        </Text>
-                        <Text className="text-muted-foreground text-sm">
-                          {theme.questions.length} questions
-                        </Text>
-                      </View>
-                      <Play className="text-primary" size={24} />
-                    </CardContent>
-                  </Card>
-                </Pressable>
-              ))}
+              {themes &&
+                themes.map((theme: ThemeWithQuestions) => {
+                  // Générer un nombre aléatoire entre 35 et 250
+                  const randomLength =
+                    Math.floor(Math.random() * (250 - 35 + 1)) + 35;
+
+                  return (
+                    <Pressable
+                      key={theme.id}
+                      onPress={() => {
+                        router.push({
+                          pathname: "/quiz",
+                          params: {
+                            quizRequest: JSON.stringify({
+                              length: Math.min(
+                                randomLength,
+                                theme.questions.length
+                              ), // S'assurer de ne pas dépasser le nombre de questions disponibles
+                              theme: theme.name,
+                            }),
+                            quizType: JSON.stringify(QuizType.PREDEFINED),
+                          },
+                        });
+                      }}
+                    >
+                      <Card>
+                        <CardContent className="flex-row items-center p-4">
+                          <View className="flex-1">
+                            <Text className="font-medium">
+                              {formatName(theme.name)}
+                            </Text>
+                            <Text className="text-muted-foreground text-sm">
+                              {randomLength + ""} questions
+                            </Text>
+                          </View>
+                          <Play className="text-primary" size={24} />
+                        </CardContent>
+                      </Card>
+                    </Pressable>
+                  );
+                })}
             </View>
           </Animated.View>
         </View>

@@ -10,6 +10,7 @@ export const useGetUserInfo = () => {
       const headers = {
         Cookie: cookies,
       };
+
       const response = await fetch(`${SERVER_BASE_URL}/api/user-info`, {
         headers,
       });
