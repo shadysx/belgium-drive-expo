@@ -1,4 +1,4 @@
-package com.shadysxcode.belgiumdrive
+package com.shadycode.belgiumdrive
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

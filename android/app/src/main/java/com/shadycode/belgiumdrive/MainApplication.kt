@@ -1,4 +1,4 @@
-package com.shadysxcode.belgiumdrive
+package com.shadycode.belgiumdrive
 
 import android.app.Application
 import android.content.res.Configuration
