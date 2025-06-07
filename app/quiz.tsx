@@ -1,32 +1,17 @@
-import { View, ActivityIndicator } from "react-native";
-import { Text } from "~/components/ui/text";
-import { useState, useMemo } from "react";
-import { router, useLocalSearchParams } from "expo-router";
-import { QuizSubmission } from "~/interfaces/dto/quiz-submission.interface";
-import { QuizSubmissionElement } from "~/interfaces/dto/quiz-submission-element.interface";
-import { useSubmitQuiz } from "~/hooks/useQuery/useSubmitQuiz";
-import { useQuizTimer } from "~/hooks/useQuizTimer";
-import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
+import { useLocalSearchParams } from "expo-router";
 import { QuizRequest } from "~/interfaces/dto/quiz-request.interface";
-import { shuffleAnswers } from "~/lib/utils";
-import QuizViewer from "~/components/quiz/QuizViewer";
-import { useAchievementNotification } from "~/src/contexts/achievement-notification.context";
+import { useGetQuiz } from "~/hooks/useQuery/useQuiz";
+import { useQuizTimer } from "~/hooks/useQuizTimer";
+import { useQuizLogic } from "~/hooks/useQuizLogic";
 import { QuizType } from "~/enums/quiz-type.enum";
-import QuizHeader from "~/components/quiz/QuizHeader";
-import { useProgressDialog } from "~/src/contexts/progress-dialog.context";
 import { SafeAreaView } from "react-native-safe-area-context";
+import QuizLoadingState from "~/components/quiz/QuizLoadingState";
+import QuizErrorState from "~/components/quiz/QuizErrorState";
+import QuizContent from "~/components/quiz/QuizContent";
 
 const initialTimeLeft = 30;
 
 export default function QuizScreen() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
-    null
-  );
-  const [quizSubmissionElements, setQuizSubmissionElements] = useState<
-    QuizSubmissionElement[]
-  >([]);
-
   const { quizRequest, quizType } = useLocalSearchParams<{
     quizRequest: string;
     quizType: string;
@@ -42,128 +27,40 @@ export default function QuizScreen() {
     isLoading,
   } = useGetQuiz(quizRequestParsed);
 
-  const processedQuestions = useMemo(
-    () =>
-      questions?.map((question) => {
-        const shuffledQuestion = shuffleAnswers(question);
-        return shuffledQuestion;
-      }),
-    [questions]
+  const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () =>
+    handleAnswer()
   );
 
-  const questionsLength = questions?.length ?? 0;
-
-  const { showAchievement } = useAchievementNotification();
-  const { showProgressDialog } = useProgressDialog();
-  const submitQuizMutation = useSubmitQuiz();
-  const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () => {
-    handleAnswer();
+  const {
+    currentQuestionIndex,
+    selectedAnswerIndex,
+    currentQuestion,
+    questionsLength,
+    setSelectedAnswerIndex,
+    handleAnswer,
+    submitQuizMutation,
+  } = useQuizLogic({
+    questions,
+    quizType: quizTypeParsed,
+    resetTimer,
   });
 
-  const currentQuestion = useMemo(() => {
-    return processedQuestions?.[currentQuestionIndex];
-  }, [processedQuestions, currentQuestionIndex]);
+  if (isError) return <QuizErrorState error={error} />;
 
-  const handleAnswer = async () => {
-    try {
-      if (!currentQuestion) return;
-
-      let originalIndex = null;
-
-      if (selectedAnswerIndex !== null) {
-        originalIndex = currentQuestion.originalIndexMap[selectedAnswerIndex];
-      }
-
-      const quizSubmissionElement: QuizSubmissionElement = {
-        questionId: currentQuestion.id,
-        userAnswerIndex: originalIndex,
-      };
-
-      const quizSubmission: QuizSubmission = {
-        quizSubmissionElements: [
-          ...quizSubmissionElements,
-          quizSubmissionElement,
-        ],
-        type: quizTypeParsed,
-      };
-
-      setQuizSubmissionElements((prev) => [...prev, quizSubmissionElement]);
-
-      if (currentQuestionIndex < questionsLength - 1) {
-        setCurrentQuestionIndex((prev) => prev + 1);
-        setSelectedAnswerIndex(null);
-        resetTimer();
-      } else {
-        const result = await submitQuizMutation.mutateAsync(quizSubmission);
-
-        if (result.progressData.completedUserAchievements.length > 0) {
-          showAchievement(
-            result.progressData.completedUserAchievements[0].achievement
-          );
-        }
-
-        showProgressDialog(result.progressData);
-
-        router.replace({
-          pathname: "/results",
-          params: {
-            quizResult: JSON.stringify(result),
-            quizLength: JSON.stringify(questionsLength),
-          },
-        });
-      }
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-
-  if (isError) {
-    return (
-      <View className="flex-1 items-center justify-center p-4">
-        <Text className="text-destructive text-center">
-          {error instanceof Error ? error.message : "Something went wrong"}
-        </Text>
-      </View>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" className="text-primary" />
-      </View>
-    );
-  }
+  if (isLoading) return <QuizLoadingState />;
 
   return (
     <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
-      <View className="px-2 flex-1">
-        <View className="flex-1">
-          <View className="mb-4">
-            <QuizHeader
-              timeLeft={timeLeft}
-              currentQuestionIndex={currentQuestionIndex}
-              questionsLength={questionsLength}
-            />
-          </View>
-
-          {currentQuestion && (
-            <QuizViewer
-              question={currentQuestion}
-              selectedAnswerIndex={selectedAnswerIndex}
-              setSelectedAnswerIndex={setSelectedAnswerIndex}
-              handleAnswer={handleAnswer}
-            />
-          )}
-        </View>
-
-        {submitQuizMutation.isPending && (
-          <View className="absolute inset-0 bg-black/50 items-center justify-center">
-            <ActivityIndicator size="large" color="#fff" />
-            <Text className="text-white mt-4">Soumission en cours...</Text>
-          </View>
-        )}
-      </View>
+      <QuizContent
+        timeLeft={timeLeft}
+        currentQuestionIndex={currentQuestionIndex}
+        questionsLength={questionsLength}
+        currentQuestion={currentQuestion}
+        selectedAnswerIndex={selectedAnswerIndex}
+        setSelectedAnswerIndex={setSelectedAnswerIndex}
+        handleAnswer={handleAnswer}
+        isSubmitting={submitQuizMutation.isPending}
+      />
     </SafeAreaView>
   );
 }
