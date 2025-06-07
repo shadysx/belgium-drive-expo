@@ -11,7 +11,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { CheckCircle2, XCircle, Clock, ArrowRight } from "~/lib/icons";
 import { ChevronLeft } from "~/lib/icons";
-import { formatFirebaseUrl, isPassed } from "~/lib/utils";
+import { formatFirebaseUrl, formatImageUrl, isPassed } from "~/lib/utils";
 
 export default function ResultsScreen() {
   const { quizResult } = useLocalSearchParams<{
@@ -19,6 +19,7 @@ export default function ResultsScreen() {
   }>();
 
   const result: QuizResult = JSON.parse(quizResult);
+
   const passed = isPassed(result.score, result.quizResultElements.length);
 
   const stats = {
@@ -154,7 +155,7 @@ export default function ResultsScreen() {
                         {element.question.thumbnailUrl && (
                           <Image
                             source={{
-                              uri: formatFirebaseUrl(
+                              uri: formatImageUrl(
                                 element.question.thumbnailUrl
                               ),
                             }}

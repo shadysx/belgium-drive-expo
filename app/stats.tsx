@@ -1,7 +1,7 @@
 import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "~/components/shared/Header";
-import StatsCard from "~/components/home/StatsCard";
+import StatsCard from "~/components/stats/StatsCard";
 import {
   Trophy,
   Timer,
@@ -17,7 +17,7 @@ import { useGetQuizResults } from "~/hooks/useQuery/useQuizResults";
 import { isPassed } from "~/lib/utils";
 
 export default function StatsScreen() {
-  const { data } = useGetQuizResults(10000);
+  const { data } = useGetQuizResults(10000000);
   const allResults = data?.pages.flatMap((page) => page.results) ?? [];
 
   const totalQuizzes = allResults.length;

@@ -9,6 +9,7 @@ import { AspectRatio } from "~/components/ui/aspect-ratio";
 import { Button } from "~/components/ui/button";
 import { Info, X } from "lucide-react-native";
 import { Header } from "~/components/shared/Header";
+import { formatImageUrl } from "~/lib/utils";
 
 interface QuizViewerProps {
   question: QuizQuestion;
@@ -47,7 +48,7 @@ export default function QuizViewer({
         {question?.imageUrl && (
           <AspectRatio ratio={1.4}>
             <Image
-              source={{ uri: question.imageUrl }}
+              source={{ uri: formatImageUrl(question.imageUrl) }}
               className="w-full h-full"
               resizeMode="cover"
             />

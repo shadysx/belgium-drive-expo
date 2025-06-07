@@ -15,7 +15,7 @@ export default function QuizView() {
 
   const decodedQuestion: QuizQuestion = {
     ...quizResultElementParsed.question,
-    imageUrl: formatFirebaseUrl(quizResultElementParsed.question.imageUrl),
+    imageUrl: quizResultElementParsed.question.imageUrl,
   };
 
   return (

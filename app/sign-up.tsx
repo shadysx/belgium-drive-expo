@@ -28,9 +28,9 @@ const SignUp = () => {
   } = useForm<SignUpFormData>({
     resolver: yupResolver(signUpFormSchema),
     defaultValues: {
-      email: "test@mail.com",
-      password: "password",
-      name: "Laurent",
+      email: __DEV__ ? "test@mail.com" : "",
+      password: __DEV__ ? "password" : "",
+      name: __DEV__ ? "LaurentK" : "",
     },
   });
 
@@ -53,7 +53,6 @@ const SignUp = () => {
           },
         }
       );
-      // await initializeUserAchievements.mutateAsync();
       router.replace("/home");
     } catch {
     } finally {
@@ -65,15 +64,19 @@ const SignUp = () => {
     <View className="flex-1 justify-center items-center p-6 bg-secondary/30">
       <Card className="w-full max-w-sm p-6 rounded-2xl">
         <CardHeader>
-          <Text className="text-2xl font-bold text-center">Create Account</Text>
+          <Text className="text-2xl font-bold text-center">
+            Créer un compte
+          </Text>
           <Text className="text-muted-foreground text-center">
-            Sign up to get started
+            Créez un compte pour commencer
           </Text>
         </CardHeader>
 
         <CardContent className="gap-4">
           <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Name</Text>
+            <Text className="text-sm text-muted-foreground">
+              Nom d'utilisateur
+            </Text>
             <Controller
               name="name"
               control={control}
@@ -84,6 +87,8 @@ const SignUp = () => {
                     onChangeText={onChange}
                     className="bg-background"
                     placeholder="Enter your name"
+                    autoComplete="username"
+                    textContentType="username"
                   />
                   {errors.name?.message && (
                     <ErrorText errorMessage={errors.name.message} />
@@ -104,9 +109,11 @@ const SignUp = () => {
                     value={value}
                     onChangeText={onChange}
                     className="bg-background"
-                    placeholder="Enter your email"
+                    placeholder="Entrez votre email"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    autoComplete="email"
+                    textContentType="emailAddress"
                   />
                   {errors.email?.message && (
                     <ErrorText errorMessage={errors.email.message} />
@@ -117,7 +124,7 @@ const SignUp = () => {
           </View>
 
           <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Password</Text>
+            <Text className="text-sm text-muted-foreground">Mot de passe</Text>
             <Controller
               name="password"
               control={control}
@@ -127,8 +134,10 @@ const SignUp = () => {
                     value={value}
                     onChangeText={onChange}
                     className="bg-background"
-                    placeholder="Choose a password"
+                    placeholder="Choisissez un mot de passe"
                     secureTextEntry
+                    autoComplete="new-password"
+                    textContentType="newPassword"
                   />
                   {errors.password?.message && (
                     <ErrorText errorMessage={errors.password.message} />

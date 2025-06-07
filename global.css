@@ -12,8 +12,8 @@
     --primary: 200 100% 45%;
     --primary-foreground: 0 0% 100%;
 
-    /* Accent : Turquoise énergique */
-    --accent: 170 100% 45%;
+    /* Accent : Même couleur que primary */
+    --accent: 200 100% 45%;
     --accent-foreground: 0 0% 100%;
 
     /* Tons neutres élégants */
@@ -26,6 +26,10 @@
 
     --muted: 200 20% 96%;
     --muted-foreground: 200 30% 40%;
+
+    /* Popover - pour les Select et autres dropdowns */
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 50% 10%;
 
     /* Alertes et actions */
     --destructive: 0 100% 65%;
@@ -51,7 +55,7 @@
     --primary-foreground: 0 0% 100%;
 
     /* Accent ajusté pour le mode sombre */
-    --accent: 170 100% 50%;
+    --accent: 200 100% 60%;
     --accent-foreground: 0 0% 100%;
 
     /* Cartes et conteneurs */
@@ -65,6 +69,10 @@
     /* Éléments atténués */
     --muted: 200 30% 12%;
     --muted-foreground: 200 20% 65%;
+
+    /* Popover en mode sombre */
+    --popover: 200 50% 7%;
+    --popover-foreground: 200 20% 98%;
 
     /* Alertes ajustées */
     --destructive: 0 100% 65%;

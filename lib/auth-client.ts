@@ -7,7 +7,6 @@ import { adminClient } from "better-auth/client/plugins";
 export const authClient = createAuthClient({
   baseURL: SERVER_BASE_URL,
   plugins: [
-    adminClient(),
     expoClient({
       scheme: "belgium-drive",
       storagePrefix: "belgium-drive",

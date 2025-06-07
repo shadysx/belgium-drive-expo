@@ -1,6 +1,4 @@
 import { Card, CardContent } from "~/components/ui/card";
-import { Check } from "lucide-react-native";
-import { View } from "react-native";
 import { Text } from "~/components/ui/text";
 
 interface StatsCardProps {

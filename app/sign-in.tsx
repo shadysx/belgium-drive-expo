@@ -5,7 +5,6 @@ import {
   CardContent,
   CardFooter,
 } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 import { authClient } from "../lib/auth-client";
@@ -31,8 +30,8 @@ const SignIn = () => {
   } = useForm<SignInFormData>({
     resolver: yupResolver(signInFormSchema),
     defaultValues: {
-      email: "test@mail.com",
-      password: "password",
+      email: __DEV__ ? "test@mail.com" : "",
+      password: __DEV__ ? "password" : "",
     },
     mode: "onSubmit",
   });
@@ -40,7 +39,6 @@ const SignIn = () => {
   const onSubmit = async (data: SignInFormData) => {
     try {
       setIsLoading(true);
-      console.log("Server base url", SERVER_BASE_URL);
       await authClient.signIn.email(
         {
           email: data.email,
@@ -67,9 +65,9 @@ const SignIn = () => {
     <View className="flex-1 justify-center items-center p-6 bg-secondary/30">
       <Card className="w-full max-w-sm p-6 rounded-2xl">
         <CardHeader>
-          <Text className="text-2xl font-bold text-center">Welcome Back</Text>
+          <Text className="text-2xl font-bold text-center">Bienvenue</Text>
           <Text className="text-muted-foreground text-center">
-            Sign in to your account
+            Connectez-vous à votre compte
           </Text>
         </CardHeader>
 
@@ -85,9 +83,11 @@ const SignIn = () => {
                     value={value}
                     onChangeText={onChange}
                     className="bg-background"
-                    placeholder="Enter your email"
+                    placeholder="Entrez votre email"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    autoComplete="email"
+                    textContentType="emailAddress"
                   />
                   {errors.email?.message && (
                     <ErrorText errorMessage={errors.email.message} />
@@ -98,7 +98,7 @@ const SignIn = () => {
           </View>
 
           <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Password</Text>
+            <Text className="text-sm text-muted-foreground">Mot de passe</Text>
             <Controller
               control={control}
               name="password"
@@ -110,6 +110,8 @@ const SignIn = () => {
                     className="bg-background"
                     placeholder="Enter your password"
                     secureTextEntry
+                    autoComplete="current-password"
+                    textContentType="password"
                   />
                   {errors.password?.message && (
                     <ErrorText errorMessage={errors.password.message} />
@@ -132,7 +134,7 @@ const SignIn = () => {
             className="text-sm text-muted-foreground text-center active:opacity-70"
             onPress={() => router.replace("/sign-up")}
           >
-            Don't have an account? Sign up
+            Pas de compte ? Créer un compte
           </Text>
         </CardFooter>
       </Card>

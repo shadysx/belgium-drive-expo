@@ -20,13 +20,13 @@ export const NAV_THEME = {
 };
 
 export const SERVER_BASE_URL = Platform.select({
-  // ios: "http://localhost:3000", // Dev
+  ios: "http://localhost:3001", // Dev
   // ios: "http://192.168.0.100:80", // Test
   // ios: "http://213.213.230.92:80", // Prod
-  ios: "https://belgiumdrive.com", // Prod
+  // ios: "https://belgiumdrive.com", // Prod
   // android: "http://10.0.2.2:3000",
   // android: "http://192.168.0.100:80",
-  android: "http://belgiumdrive.com",
+  // android: "http://belgiumdrive.com",
 });
 
 export const NOTIFICATION_DELAY = 5000;

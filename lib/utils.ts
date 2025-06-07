@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { QuizQuestion } from "~/interfaces/quiz-question.interface";
+import { SERVER_BASE_URL } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -35,12 +36,33 @@ export const shuffleAnswers = (question: QuizQuestion) => {
   };
 };
 
+/*
+ * Since passing objects as string params from quiz to results,
+ * After parsing the %2F encoding from firebase is replaced with /, so we need to restore the initial url
+ */
 export const formatFirebaseUrl = (url: string) => {
   const formattedUrl = url
     .replace("/images/", "/images%2F")
     .replace("thumbnails/", "thumbnails%2F");
 
   return formattedUrl;
+};
+
+/**
+ * Formats an image URL from our own file server to be usable on mobile
+ * - If the URL starts with "/api", adds SERVER_BASE_URL
+ * - If the URL is already absolute (http/https), returns it
+ */
+export const formatImageUrl = (url: string | null | undefined) => {
+  if (!url) return "";
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return formatFirebaseUrl(url);
+  }
+
+  if (url.startsWith("/api")) {
+    return `${SERVER_BASE_URL}${url}`;
+  }
 };
 
 export const isPassed = (score: number, totalQuestions: number) => {

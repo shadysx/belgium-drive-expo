@@ -18,11 +18,11 @@ export default function LandingScreen() {
             <CardContent className="p-6 gap-4">
               <View className="gap-2">
                 <Text className="text-2xl font-bold text-center">
-                  Ready to Start?
+                  Prêt à commencer ?
                 </Text>
                 <Text className="text-base text-center text-muted-foreground">
-                  Practice for your Belgian driving test with our comprehensive
-                  question bank
+                  Pratiquez pour votre examen de conduite belge avec notre
+                  banque de questions
                 </Text>
               </View>
 
@@ -34,12 +34,8 @@ export default function LandingScreen() {
                   </Text>
                 </View>
                 <View className="items-center">
-                  <Text className="text-3xl font-bold text-primary">50+</Text>
+                  <Text className="text-3xl font-bold text-primary">15+</Text>
                   <Text className="text-sm text-muted-foreground">Themes</Text>
-                </View>
-                <View className="items-center">
-                  <Text className="text-3xl font-bold text-primary">24/7</Text>
-                  <Text className="text-sm text-muted-foreground">Access</Text>
                 </View>
               </View>
             </CardContent>
@@ -50,7 +46,7 @@ export default function LandingScreen() {
                 onPress={() => router.push("/sign-up")}
               >
                 <Text className="text-primary-foreground text-lg">
-                  Get Started
+                  Commencer
                 </Text>
               </Button>
               <Button
@@ -58,7 +54,7 @@ export default function LandingScreen() {
                 className="w-full h-12"
                 onPress={() => router.push("/sign-in")}
               >
-                <Text className="text-lg">I already have an account</Text>
+                <Text className="text-lg">J'ai déjà un compte</Text>
               </Button>
             </CardFooter>
           </Card>

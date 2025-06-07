@@ -30,7 +30,6 @@ export default function QuizScreen() {
   const { quizRequest, quizType } = useLocalSearchParams<{
     quizRequest: string;
     quizType: string;
-    theme: string;
   }>();
 
   const quizRequestParsed: QuizRequest = JSON.parse(quizRequest);
