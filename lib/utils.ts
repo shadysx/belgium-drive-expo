@@ -19,19 +19,18 @@ export const shuffleAnswers = (question: QuizQuestion) => {
     originalIndexMap[index] = index;
   });
 
-  for (let i = answers.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [answers[i], answers[j]] = [answers[j], answers[i]];
-    [originalIndexMap[i], originalIndexMap[j]] = [
-      originalIndexMap[j],
-      originalIndexMap[i],
-    ];
-  }
+  const randomNumber = Math.floor(Math.random() * answers.length);
+  console.log("randomNumber", randomNumber);
+  [answers[0], answers[randomNumber]] = [answers[randomNumber], answers[0]];
+  [originalIndexMap[0], originalIndexMap[randomNumber]] = [
+    originalIndexMap[randomNumber],
+    originalIndexMap[0],
+  ];
 
   return {
     ...question,
     answers,
-    answerIndex: originalIndexMap[question.answerIndex],
+    answerIndex: originalIndexMap[0],
     originalIndexMap,
   };
 };

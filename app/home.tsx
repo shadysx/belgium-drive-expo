@@ -45,8 +45,8 @@ export default function HomeScreen() {
                           quizRequest: JSON.stringify({
                             length: theme.questions.length,
                             theme: theme.name,
+                            quizType: QuizType.PREDEFINED,
                           }),
-                          quizType: JSON.stringify(QuizType.PREDEFINED),
                         },
                       });
                     }}

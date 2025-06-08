@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Card, CardContent } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { Timer } from "lucide-react-native";
+import { Timer, Skull } from "lucide-react-native";
 import { Progress } from "~/components/ui/progress";
 import Animated, {
   useAnimatedStyle,
@@ -15,13 +15,13 @@ interface QuizHeaderProps {
   timeLeft: number;
   currentQuestionIndex: number;
   questionsLength: number;
+  isSurvivalQuiz: boolean;
 }
 
-const QuizHeader = ({
-  timeLeft,
-  currentQuestionIndex,
-  questionsLength,
-}: QuizHeaderProps) => {
+const QuizHeader = (props: QuizHeaderProps) => {
+  const { timeLeft, currentQuestionIndex, questionsLength, isSurvivalQuiz } =
+    props;
+
   const breathingStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -77,15 +77,32 @@ const QuizHeader = ({
             <View className="flex-1 ml-4">
               <View className="h-10 relative">
                 <Progress
-                  value={(currentQuestionIndex + 1) * (100 / questionsLength)}
-                  className="absolute inset-0 h-full rounded-full border border-primary/20"
-                  indicatorClassName="bg-primary"
+                  value={
+                    isSurvivalQuiz
+                      ? 100
+                      : (currentQuestionIndex + 1) * (100 / questionsLength)
+                  }
+                  className={`absolute inset-0 h-full rounded-full border ${
+                    isSurvivalQuiz ? "border-red-500/20" : "border-primary/20"
+                  }`}
+                  indicatorClassName={
+                    isSurvivalQuiz ? "bg-red-500" : "bg-primary"
+                  }
                 />
                 <View className="absolute inset-0 justify-center items-center">
-                  <Text className="text-sm font-bold text-white">
-                    Question {currentQuestionIndex + 1} sur{" "}
-                    {questionsLength ?? 0}
-                  </Text>
+                  {isSurvivalQuiz ? (
+                    <View className="flex-row items-center gap-2">
+                      <Skull size={16} className="text-white" />
+                      <Text className="text-sm font-bold text-white">
+                        Mode Survie
+                      </Text>
+                    </View>
+                  ) : (
+                    <Text className="text-sm font-bold text-white">
+                      Question {currentQuestionIndex + 1} sur{" "}
+                      {questionsLength ?? 0}
+                    </Text>
+                  )}
                 </View>
               </View>
             </View>

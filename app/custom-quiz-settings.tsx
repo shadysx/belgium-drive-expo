@@ -76,8 +76,8 @@ export default function CustomQuizSettings() {
         quizRequest: JSON.stringify({
           length: questionCount,
           themes: themesToSubmit,
+          quizType: QuizType.CUSTOM,
         }),
-        quizType: JSON.stringify(QuizType.CUSTOM),
       },
     });
   };

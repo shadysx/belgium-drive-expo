@@ -3,6 +3,7 @@ import { Text } from "~/components/ui/text";
 import QuizHeader from "./QuizHeader";
 import QuizViewer from "./QuizViewer";
 import { ShuffledQuizQuestion } from "~/interfaces/shuffled-quiz-question.interface";
+import { QuizType } from "~/enums/quiz-type.enum";
 
 interface QuizContentProps {
   timeLeft: number;
@@ -13,6 +14,7 @@ interface QuizContentProps {
   setSelectedAnswerIndex: (index: number | null) => void;
   handleAnswer: () => void;
   isSubmitting: boolean;
+  isSurvivalQuiz: boolean;
 }
 
 export default function QuizContent({
@@ -24,12 +26,14 @@ export default function QuizContent({
   setSelectedAnswerIndex,
   handleAnswer,
   isSubmitting,
+  isSurvivalQuiz,
 }: QuizContentProps) {
   return (
     <View className="px-2 flex-1">
       <View className="flex-1">
         <View className="mb-4">
           <QuizHeader
+            isSurvivalQuiz={isSurvivalQuiz}
             timeLeft={timeLeft}
             currentQuestionIndex={currentQuestionIndex}
             questionsLength={questionsLength}

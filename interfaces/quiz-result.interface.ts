@@ -9,4 +9,6 @@ export interface QuizResult {
   quizResultElements: QuizResultElement[];
   createdAt: string;
   updatedAt: string;
+  previousBestSurvivalScore?: number;
+  newSurvivalScore?: number;
 }

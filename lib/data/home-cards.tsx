@@ -8,12 +8,13 @@ import {
   Target,
   Trophy,
 } from "lucide-react-native";
+import { Skull } from "~/lib/icons/Skull";
 import { QuizType } from "~/enums/quiz-type.enum";
 
 export interface HomeCard {
   icon: React.ReactNode;
   text: string;
-  isContrasted: boolean;
+  cn: string;
   onPress: () => void;
 }
 
@@ -21,46 +22,55 @@ export const homeCards: HomeCard[] = [
   {
     icon: <Car size={24} color="white" />,
     text: "Simulation d'examen",
-    isContrasted: true,
+    cn: "bg-primary",
     onPress: () =>
       router.push({
         pathname: "/quiz",
         params: {
           quizRequest: JSON.stringify({
             length: 50,
+            quizType: QuizType.SIMULATION,
           }),
-          quizType: JSON.stringify(QuizType.SIMULATION),
+        },
+      }),
+  },
+
+  {
+    icon: <Skull size={24} color="white" />,
+    text: "Survie",
+    cn: "bg-destructive",
+    onPress: () =>
+      router.push({
+        pathname: "/quiz",
+        params: {
+          quizRequest: JSON.stringify({
+            quizType: QuizType.SURVIVAL,
+          }),
         },
       }),
   },
   {
     icon: <Target size={24} className="text-primary" />,
     text: "Examen personnalisé",
-    isContrasted: false,
+    cn: "bg-secondary",
     onPress: () => router.push("/custom-quiz-settings"),
-  },
-  {
-    icon: <History size={24} className="text-primary" />,
-    text: "Historique",
-    isContrasted: false,
-    onPress: () => router.push("/history"),
   },
   {
     icon: <Trophy size={24} className="text-primary" />,
     text: "Trophées",
-    isContrasted: false,
+    cn: "bg-secondary",
     onPress: () => router.push("/achievements"),
   },
   {
     icon: <BarChart3 size={24} className="text-primary" />,
     text: "Statistiques",
-    isContrasted: false,
+    cn: "bg-secondary",
     onPress: () => router.push("/stats"),
   },
   {
     icon: <Award size={24} className="text-primary" />,
     text: "Classements",
-    isContrasted: false,
+    cn: "bg-secondary",
     onPress: () => router.push("/leaderboards"),
   },
 ];

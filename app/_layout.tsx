@@ -153,6 +153,13 @@ export default function RootLayout() {
                   headerShown: false,
                 }}
               />
+              <Stack.Screen
+                name="survival-results"
+                options={{
+                  title: "Résultats",
+                  headerShown: false,
+                }}
+              />
             </Stack>
           </QueryClientProvider>
         </ProgressDialogProvider>

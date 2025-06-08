@@ -6,85 +6,22 @@ import { Text } from "~/components/ui/text";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { UserRow } from "~/components/leaderboards/UserRow";
 import { useGetLeaderboards } from "~/hooks/useQuery/useLeaderboards";
-
-// Mock data
-const mockUsers = [
-  {
-    id: "u1",
-    name: "Thomas Dupont",
-    xp: 12450,
-    level: 18,
-    isCurrentUser: false,
-  },
-  {
-    id: "u2",
-    name: "Julie Lemaire",
-    xp: 9872,
-    level: 15,
-    isCurrentUser: false,
-  },
-  {
-    id: "u3",
-    name: "Marc Janssens",
-    xp: 8654,
-    level: 14,
-    isCurrentUser: true,
-  },
-  {
-    id: "u4",
-    name: "Sophie Verlinden",
-    xp: 7321,
-    level: 12,
-    isCurrentUser: false,
-  },
-  {
-    id: "u5",
-    name: "Luc Vermeulen",
-    xp: 6543,
-    level: 11,
-    isCurrentUser: false,
-  },
-  {
-    id: "u6",
-    name: "Emma De Smet",
-    xp: 5987,
-    level: 10,
-    isCurrentUser: false,
-  },
-  {
-    id: "u7",
-    name: "David Claes",
-    xp: 4765,
-    level: 9,
-    isCurrentUser: false,
-  },
-  {
-    id: "u8",
-    name: "Laura Peeters",
-    xp: 3821,
-    level: 8,
-    isCurrentUser: false,
-  },
-  {
-    id: "u9",
-    name: "Nicolas Maes",
-    xp: 2987,
-    level: 7,
-    isCurrentUser: false,
-  },
-  {
-    id: "u10",
-    name: "Charlotte Willems",
-    xp: 1854,
-    level: 5,
-    isCurrentUser: false,
-  },
-];
+import { Card, CardContent } from "~/components/ui/card";
+import { Trophy, Skull } from "lucide-react-native";
+import { Pressable } from "react-native";
 
 export default function LeaderboardScreen() {
   const [tab, setTab] = useState("global");
+  const [scoreType, setScoreType] = useState<"xp" | "survival">("xp");
 
   const { data: leaderboards } = useGetLeaderboards();
+
+  const getLeaderboardData = (period: "global" | "weekly" | "monthly") => {
+    if (!leaderboards?.[period]) return [];
+    return scoreType === "xp"
+      ? leaderboards[period].xp
+      : leaderboards[period].survival || [];
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-background px-2">
@@ -92,6 +29,78 @@ export default function LeaderboardScreen() {
 
       <ScrollView className="flex-1">
         <View className="flex-1 justify-center">
+          {/* Filtre par type de score */}
+          <View className="px-2 mb-4">
+            <View className="flex-row gap-2">
+              <Pressable className="flex-1" onPress={() => setScoreType("xp")}>
+                <Card
+                  className={`${
+                    scoreType === "xp"
+                      ? "bg-primary/10 border-primary/30"
+                      : "bg-card"
+                  }`}
+                >
+                  <CardContent className="p-3">
+                    <View className="flex-row items-center justify-center gap-2">
+                      <Trophy
+                        size={16}
+                        className={
+                          scoreType === "xp"
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }
+                      />
+                      <Text
+                        className={`font-medium ${
+                          scoreType === "xp"
+                            ? "text-primary"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        Par XP
+                      </Text>
+                    </View>
+                  </CardContent>
+                </Card>
+              </Pressable>
+
+              <Pressable
+                className="flex-1"
+                onPress={() => setScoreType("survival")}
+              >
+                <Card
+                  className={`${
+                    scoreType === "survival"
+                      ? "bg-red-500/10 border-red-500/30"
+                      : "bg-card"
+                  }`}
+                >
+                  <CardContent className="p-3">
+                    <View className="flex-row items-center justify-center gap-2">
+                      <Skull
+                        size={16}
+                        className={
+                          scoreType === "survival"
+                            ? "text-red-500"
+                            : "text-muted-foreground"
+                        }
+                      />
+                      <Text
+                        className={`font-medium ${
+                          scoreType === "survival"
+                            ? "text-red-500"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        Survie
+                      </Text>
+                    </View>
+                  </CardContent>
+                </Card>
+              </Pressable>
+            </View>
+          </View>
+
           <Tabs
             value={tab}
             onValueChange={setTab}
@@ -108,27 +117,55 @@ export default function LeaderboardScreen() {
                 <Text>Mensuel</Text>
               </TabsTrigger>
             </TabsList>
+
             <TabsContent value="global">
-              {leaderboards?.global.map((user, index) => {
-                return <UserRow key={user.id} user={user} index={index} />;
+              {getLeaderboardData("global").map((user, index) => {
+                return (
+                  <UserRow
+                    key={user.id}
+                    user={user}
+                    index={index}
+                    scoreType={scoreType}
+                  />
+                );
               })}
             </TabsContent>
+
             <TabsContent value="weekly">
-              {leaderboards?.weekly && leaderboards?.weekly.length > 0 ? (
-                leaderboards?.weekly.map((user, index) => {
-                  return <UserRow key={user.id} user={user} index={index} />;
+              {getLeaderboardData("weekly").length > 0 ? (
+                getLeaderboardData("weekly").map((user, index) => {
+                  return (
+                    <UserRow
+                      key={user.id}
+                      user={user}
+                      index={index}
+                      scoreType={scoreType}
+                    />
+                  );
                 })
               ) : (
-                <Text>Work in progress</Text>
+                <Text className="text-center text-muted-foreground py-8">
+                  Aucune donnée disponible
+                </Text>
               )}
             </TabsContent>
+
             <TabsContent value="monthly">
-              {leaderboards?.monthly && leaderboards?.monthly.length > 0 ? (
-                leaderboards?.monthly.map((user, index) => {
-                  return <UserRow key={user.id} user={user} index={index} />;
+              {getLeaderboardData("monthly").length > 0 ? (
+                getLeaderboardData("monthly").map((user, index) => {
+                  return (
+                    <UserRow
+                      key={user.id}
+                      user={user}
+                      index={index}
+                      scoreType={scoreType}
+                    />
+                  );
                 })
               ) : (
-                <Text>Work in progress</Text>
+                <Text className="text-center text-muted-foreground py-8">
+                  Aucune donnée disponible
+                </Text>
               )}
             </TabsContent>
           </Tabs>

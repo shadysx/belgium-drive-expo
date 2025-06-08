@@ -6,9 +6,17 @@ import { cn } from "~/lib/utils";
 import { Text } from "../ui/text";
 import { getRankStyles } from "~/lib/utils/getRankStyles";
 
-export function UserRow({ user, index }: { user: any; index: number }) {
+interface UserRowProps {
+  user: any;
+  index: number;
+  scoreType: "xp" | "survival";
+}
+
+export const UserRow = ({ user, index, scoreType }: UserRowProps) => {
   const rank = index + 1;
   const styles = getRankStyles(rank);
+  const score = scoreType === "xp" ? user.xp : user.survivalScore || 0;
+  const scoreLabel = scoreType === "xp" ? "XP" : "";
 
   return (
     <Animated.View
@@ -49,11 +57,11 @@ export function UserRow({ user, index }: { user: any; index: number }) {
                   : "text-white"
               }`}
             >
-              {user.xp.toLocaleString() + " XP"}
+              {score} {scoreLabel}
             </Text>
           </View>
         </CardContent>
       </Card>
     </Animated.View>
   );
-}
+};

@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "~/components/ui/text";
 import { Card, CardContent } from "~/components/ui/card";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
-import { Trophy, ChevronRight } from "lucide-react-native";
+import { Trophy, ChevronRight, Skull } from "lucide-react-native";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { useGetQuizResults } from "~/hooks/useQuery/useQuizResults";
 import { isPassed } from "~/lib/utils";
@@ -12,6 +12,7 @@ import { Header } from "~/components/shared/Header";
 import { FlashList } from "@shopify/flash-list";
 import { QuizResult } from "~/interfaces/quiz-result.interface";
 import { Skeleton } from "~/components/ui/skeleton";
+import React from "react";
 
 const HistorySkeleton = () => {
   const colorMode = {
@@ -70,6 +71,8 @@ export default function HistoryScreen() {
         return "Examen personnalisé";
       case QuizType.PREDEFINED:
         return "Examen prédéfini";
+      case QuizType.SURVIVAL:
+        return "Survie";
       default:
         return "Examen";
     }
@@ -101,23 +104,40 @@ export default function HistoryScreen() {
             <View className="flex-row items-center gap-4">
               <View className="flex-1">
                 <View className="flex-row items-center gap-2">
-                  <Trophy
-                    size={20}
-                    className={
-                      isPassed(result.score, result.quizResultElements.length)
-                        ? "text-green-500"
-                        : "text-destructive"
-                    }
-                  />
-                  <Text
-                    className={`text-xl font-bold ${
-                      isPassed(result.score, result.quizResultElements.length)
-                        ? "text-green-500"
-                        : "text-destructive"
-                    }`}
-                  >
-                    {result.score} / {result.quizResultElements.length}
-                  </Text>
+                  {result.type === QuizType.SURVIVAL ? (
+                    <>
+                      <Skull size={20} className="text-green-500" />
+                      <Text className={`text-xl font-bold text-green-500`}>
+                        {result.score}
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <Trophy
+                        size={20}
+                        className={
+                          isPassed(
+                            result.score,
+                            result.quizResultElements.length
+                          )
+                            ? "text-green-500"
+                            : "text-destructive"
+                        }
+                      />
+                      <Text
+                        className={`text-xl font-bold ${
+                          isPassed(
+                            result.score,
+                            result.quizResultElements.length
+                          )
+                            ? "text-green-500"
+                            : "text-destructive"
+                        }`}
+                      >
+                        {`${result.score} / ${result.quizResultElements.length}`}
+                      </Text>
+                    </>
+                  )}
                 </View>
               </View>
             </View>

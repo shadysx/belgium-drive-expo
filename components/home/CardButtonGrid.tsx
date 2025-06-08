@@ -20,7 +20,7 @@ export default function CardButtonGrid() {
           {row.map((card, cardIndex) => (
             <CardButton
               key={`${rowIndex}-${cardIndex}`}
-              isContrasted={card.isContrasted}
+              cn={card.cn}
               icon={card.icon}
               text={card.text}
               onPress={card.onPress}

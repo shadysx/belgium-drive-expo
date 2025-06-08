@@ -9,17 +9,18 @@ import { useAchievementNotification } from "~/src/contexts/achievement-notificat
 import { useProgressDialog } from "~/src/contexts/progress-dialog.context";
 import { QuizQuestion } from "~/interfaces/quiz-question.interface";
 import { ShuffledQuizQuestion } from "~/interfaces/shuffled-quiz-question.interface";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UseQuizLogicProps {
   questions: QuizQuestion[] | undefined;
-  quizType: QuizType;
   resetTimer: () => void;
+  quizType: QuizType;
 }
 
 export const useQuizLogic = ({
   questions,
-  quizType,
   resetTimer,
+  quizType,
 }: UseQuizLogicProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
@@ -31,7 +32,8 @@ export const useQuizLogic = ({
 
   const { showAchievement } = useAchievementNotification();
   const { showProgressDialog } = useProgressDialog();
-  const submitQuizMutation = useSubmitQuiz();
+  const submitQuizMutation = useSubmitQuiz(quizType);
+  const queryClient = useQueryClient();
 
   const processedQuestions = useMemo(
     () =>
@@ -83,15 +85,23 @@ export const useQuizLogic = ({
           ...quizSubmissionElements,
           quizSubmissionElement,
         ],
-        type: quizType,
+        quizType: quizType,
       };
 
       setQuizSubmissionElements((prev) => [...prev, quizSubmissionElement]);
 
-      if (currentQuestionIndex < questionsLength - 1) {
+      const answerIsCorrect =
+        selectedAnswerIndex === currentQuestion.answerIndex;
+      const isSurvivalQuiz = quizType === QuizType.SURVIVAL;
+      const isQuizOver = currentQuestionIndex >= questionsLength - 1;
+
+      if (
+        (!isQuizOver && !isSurvivalQuiz) ||
+        (isSurvivalQuiz && answerIsCorrect)
+      ) {
         nextQuestion();
         resetTimer();
-      } else {
+      } else if (isQuizOver || (isSurvivalQuiz && !answerIsCorrect)) {
         const result = await submitQuizMutation.mutateAsync(quizSubmission);
 
         if (result.progressData.completedUserAchievements.length > 0) {
@@ -102,8 +112,14 @@ export const useQuizLogic = ({
 
         showProgressDialog(result.progressData);
 
+        await queryClient.refetchQueries({
+          queryKey: ["leaderboards"],
+          type: "active",
+        });
+
         router.replace({
-          pathname: "/results",
+          pathname:
+            quizType === QuizType.SURVIVAL ? "/survival-results" : "/results",
           params: {
             quizResult: JSON.stringify(result),
             quizLength: JSON.stringify(questionsLength),

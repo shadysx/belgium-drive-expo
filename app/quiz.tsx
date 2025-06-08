@@ -12,13 +12,11 @@ import QuizContent from "~/components/quiz/QuizContent";
 const initialTimeLeft = 30;
 
 export default function QuizScreen() {
-  const { quizRequest, quizType } = useLocalSearchParams<{
+  const { quizRequest } = useLocalSearchParams<{
     quizRequest: string;
-    quizType: string;
   }>();
 
   const quizRequestParsed: QuizRequest = JSON.parse(quizRequest);
-  const quizTypeParsed: QuizType = JSON.parse(quizType);
 
   const {
     data: questions,
@@ -40,8 +38,8 @@ export default function QuizScreen() {
     handleAnswer,
     submitQuizMutation,
   } = useQuizLogic({
+    quizType: quizRequestParsed.quizType,
     questions,
-    quizType: quizTypeParsed,
     resetTimer,
   });
 
@@ -52,6 +50,7 @@ export default function QuizScreen() {
   return (
     <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
       <QuizContent
+        isSurvivalQuiz={quizRequestParsed.quizType === QuizType.SURVIVAL}
         timeLeft={timeLeft}
         currentQuestionIndex={currentQuestionIndex}
         questionsLength={questionsLength}

@@ -1,7 +1,7 @@
-import { LeaderboardRow } from "./leaderboard-row.interface";
+import { Leaderboard } from "./leaderboard.interface";
 
 export interface Leaderboards {
-  global: LeaderboardRow[];
-  monthly: LeaderboardRow[];
-  weekly: LeaderboardRow[];
+  global: Leaderboard;
+  monthly: Leaderboard;
+  weekly: Leaderboard;
 }

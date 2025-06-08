@@ -12,7 +12,7 @@ import { authClient } from "~/lib/auth-client";
 import { useRouter } from "expo-router";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { useColorScheme } from "~/lib/useColorScheme";
-import { Settings2, MoonStar, LogOut, Sun, Menu } from "~/lib/icons";
+import { Settings2, MoonStar, LogOut, Sun, Menu, History } from "~/lib/icons";
 
 export function HeaderMenu() {
   const { signOut } = authClient;
@@ -47,6 +47,14 @@ export function HeaderMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 bg-background border border-border">
         <DropdownMenuGroup>
+          <DropdownMenuItem onPress={() => router.push("/history")}>
+            <History
+              className="text-foreground mr-2"
+              size={24}
+              strokeWidth={1.25}
+            />
+            <Text className=" text-foreground mr-2">Historique</Text>
+          </DropdownMenuItem>
           <DropdownMenuItem onPress={toggleColorScheme}>
             {isDarkColorScheme ? (
               <MoonStar
@@ -81,9 +89,6 @@ export function HeaderMenu() {
             />
             <Text className="text-foreground">Déconnexion</Text>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem onPress={() => router.push("/test")}>
-            <Text>Test</Text>
-          </DropdownMenuItem> */}
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
