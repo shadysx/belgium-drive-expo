@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-export const useQuizTimer = (initialTime: number, onTimeUp: () => void) => {
+interface UseQuizTimerProps {
+  initialTime: number;
+  onTimeUp: () => void;
+}
+
+export const useQuizTimer = (props: UseQuizTimerProps) => {
+  const { initialTime, onTimeUp } = props;
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
   useEffect(() => {

@@ -3,172 +3,132 @@ import { View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Header } from "~/components/shared/Header";
 import { Text } from "~/components/ui/text";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { UserRow } from "~/components/leaderboards/UserRow";
 import { useGetLeaderboards } from "~/hooks/useQuery/useLeaderboards";
-import { Card, CardContent } from "~/components/ui/card";
 import { Trophy, Skull } from "lucide-react-native";
 import { Pressable } from "react-native";
+import { cn } from "~/lib/utils";
+import { LeaderboardType } from "~/enums/leaderboard-type.enum";
 
 export default function LeaderboardScreen() {
-  const [tab, setTab] = useState("global");
-  const [scoreType, setScoreType] = useState<"xp" | "survival">("xp");
+  const [scoreType, setScoreType] = useState<LeaderboardType>(
+    LeaderboardType.XP
+  );
 
   const { data: leaderboards } = useGetLeaderboards();
 
-  const getLeaderboardData = (period: "global" | "weekly" | "monthly") => {
-    if (!leaderboards?.[period]) return [];
-    return scoreType === "xp"
-      ? leaderboards[period].xp
-      : leaderboards[period].survival || [];
+  const getLeaderboardData = () => {
+    if (!leaderboards?.global) return [];
+    return scoreType === LeaderboardType.XP
+      ? leaderboards.global.xp
+      : leaderboards.global.survival || [];
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-background px-2">
+    <SafeAreaView className="flex-1 bg-background">
       <Header title="Classement" />
 
-      <ScrollView className="flex-1">
-        <View className="flex-1 justify-center">
-          {/* Filtre par type de score */}
-          <View className="px-2 mb-4">
-            <View className="flex-row gap-2">
-              <Pressable className="flex-1" onPress={() => setScoreType("xp")}>
-                <Card
-                  className={`${
-                    scoreType === "xp"
-                      ? "bg-primary/10 border-primary/30"
-                      : "bg-card"
-                  }`}
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        <View className="px-4">
+          <View className="mb-6">
+            <Text className="text-xl font-bold text-foreground mb-4">
+              Type de classement
+            </Text>
+
+            <View className="flex-row gap-3">
+              <Pressable
+                className="flex-1"
+                onPress={() => setScoreType(LeaderboardType.XP)}
+              >
+                <View
+                  className={cn(
+                    "min-h-[60px] px-4 py-3 rounded-xl border-2 flex-row items-center justify-center transition-all",
+                    scoreType === LeaderboardType.XP
+                      ? "bg-primary border-primary"
+                      : "bg-card border-border"
+                  )}
                 >
-                  <CardContent className="p-3">
-                    <View className="flex-row items-center justify-center gap-2">
-                      <Trophy
-                        size={16}
-                        className={
-                          scoreType === "xp"
-                            ? "text-primary"
-                            : "text-muted-foreground"
-                        }
-                      />
-                      <Text
-                        className={`font-medium ${
-                          scoreType === "xp"
-                            ? "text-primary"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        Par XP
-                      </Text>
-                    </View>
-                  </CardContent>
-                </Card>
+                  <Trophy
+                    size={20}
+                    className={
+                      scoreType === LeaderboardType.XP
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground"
+                    }
+                  />
+                  <Text
+                    className={cn(
+                      "font-semibold text-base ml-2",
+                      scoreType === LeaderboardType.XP
+                        ? "text-primary-foreground"
+                        : "text-foreground"
+                    )}
+                  >
+                    Par XP
+                  </Text>
+                </View>
               </Pressable>
 
               <Pressable
                 className="flex-1"
-                onPress={() => setScoreType("survival")}
+                onPress={() => setScoreType(LeaderboardType.SURVIVAL)}
               >
-                <Card
-                  className={`${
-                    scoreType === "survival"
-                      ? "bg-red-500/10 border-red-500/30"
-                      : "bg-card"
-                  }`}
+                <View
+                  className={cn(
+                    "min-h-[60px] px-4 py-3 rounded-xl border-2 flex-row items-center justify-center transition-all",
+                    scoreType === LeaderboardType.SURVIVAL
+                      ? "bg-red-500 border-red-500"
+                      : "bg-card border-border"
+                  )}
                 >
-                  <CardContent className="p-3">
-                    <View className="flex-row items-center justify-center gap-2">
-                      <Skull
-                        size={16}
-                        className={
-                          scoreType === "survival"
-                            ? "text-red-500"
-                            : "text-muted-foreground"
-                        }
-                      />
-                      <Text
-                        className={`font-medium ${
-                          scoreType === "survival"
-                            ? "text-red-500"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        Survie
-                      </Text>
-                    </View>
-                  </CardContent>
-                </Card>
+                  <Skull
+                    size={20}
+                    className={
+                      scoreType === LeaderboardType.SURVIVAL
+                        ? "text-white"
+                        : "text-muted-foreground"
+                    }
+                  />
+                  <Text
+                    className={cn(
+                      "font-semibold text-base ml-2",
+                      scoreType === LeaderboardType.SURVIVAL
+                        ? "text-white"
+                        : "text-foreground"
+                    )}
+                  >
+                    Survie
+                  </Text>
+                </View>
               </Pressable>
             </View>
           </View>
 
-          <Tabs
-            value={tab}
-            onValueChange={setTab}
-            className="mx-auto flex-col gap-3"
-          >
-            <TabsList className="flex-row w-full">
-              <TabsTrigger className="flex-1" value="global">
-                <Text>Global</Text>
-              </TabsTrigger>
-              <TabsTrigger className="flex-1" value="weekly">
-                <Text>Hebdo</Text>
-              </TabsTrigger>
-              <TabsTrigger className="flex-1" value="monthly">
-                <Text>Mensuel</Text>
-              </TabsTrigger>
-            </TabsList>
+          {/* Classement */}
+          <View className="mb-6">
+            <Text className="text-xl font-bold text-foreground mb-4">
+              Classement global
+            </Text>
 
-            <TabsContent value="global">
-              {getLeaderboardData("global").map((user, index) => {
-                return (
+            <View className="gap-3">
+              {getLeaderboardData().length > 0 ? (
+                getLeaderboardData().map((user, index) => (
                   <UserRow
                     key={user.id}
                     user={user}
                     index={index}
-                    scoreType={scoreType}
+                    leaderboardType={scoreType}
                   />
-                );
-              })}
-            </TabsContent>
-
-            <TabsContent value="weekly">
-              {getLeaderboardData("weekly").length > 0 ? (
-                getLeaderboardData("weekly").map((user, index) => {
-                  return (
-                    <UserRow
-                      key={user.id}
-                      user={user}
-                      index={index}
-                      scoreType={scoreType}
-                    />
-                  );
-                })
+                ))
               ) : (
-                <Text className="text-center text-muted-foreground py-8">
-                  Aucune donnée disponible
-                </Text>
+                <View className="min-h-[100px] items-center justify-center bg-card rounded-xl border-2 border-border">
+                  <Text className="text-muted-foreground font-medium">
+                    Aucune donnée disponible
+                  </Text>
+                </View>
               )}
-            </TabsContent>
-
-            <TabsContent value="monthly">
-              {getLeaderboardData("monthly").length > 0 ? (
-                getLeaderboardData("monthly").map((user, index) => {
-                  return (
-                    <UserRow
-                      key={user.id}
-                      user={user}
-                      index={index}
-                      scoreType={scoreType}
-                    />
-                  );
-                })
-              ) : (
-                <Text className="text-center text-muted-foreground py-8">
-                  Aucune donnée disponible
-                </Text>
-              )}
-            </TabsContent>
-          </Tabs>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

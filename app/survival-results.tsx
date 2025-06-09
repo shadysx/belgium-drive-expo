@@ -9,11 +9,13 @@ import Animated, {
   SlideInRight,
   BounceIn,
 } from "react-native-reanimated";
-import { Skull, Trophy, Crown, Medal, ChevronLeft } from "lucide-react-native";
+import { Skull, Trophy, ChevronLeft } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
 import { QuizType } from "~/enums/quiz-type.enum";
 import { RotateCcw } from "~/lib/icons/RotateCcw";
 import { useGetLeaderboards } from "~/hooks/useQuery/useLeaderboards";
+import { UserRow } from "~/components/leaderboards/UserRow";
+import { LeaderboardType } from "~/enums/leaderboard-type.enum";
 
 export default function SurvivalResultsScreen() {
   const { quizResult } = useLocalSearchParams<{
@@ -24,23 +26,9 @@ export default function SurvivalResultsScreen() {
 
   const { data: leaderboards } = useGetLeaderboards();
 
-  const getRankIcon = (position: number) => {
-    switch (position) {
-      case 1:
-        return <Crown size={20} className="text-yellow-500" />;
-      case 2:
-        return <Medal size={20} className="text-gray-400" />;
-      case 3:
-        return <Medal size={20} className="text-orange-500" />;
-      default:
-        return <Trophy size={20} className="text-muted-foreground" />;
-    }
-  };
-
   return (
     <SafeAreaView className="flex-1 bg-background">
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Header avec Game Over */}
         <Animated.View
           entering={FadeInDown.duration(500)}
           className="mr-4 ml-4 mb-8"
@@ -67,7 +55,6 @@ export default function SurvivalResultsScreen() {
             </Text>
           </View>
         </Animated.View>
-        {/* Statistiques */}
         <Animated.View
           entering={SlideInRight.duration(500).delay(400)}
           className="px-6 mb-8"
@@ -111,39 +98,16 @@ export default function SurvivalResultsScreen() {
             🏆 TOP 3
           </Text>
 
-          <View className="space-y-3">
+          <View className="gap-2">
             {leaderboards?.global?.survival
               ?.slice(0, 3)
               .map((player, index) => (
-                <Animated.View
+                <UserRow
                   key={player.id}
-                  entering={SlideInRight.duration(400).delay(900 + index * 100)}
-                >
-                  <Card
-                    className={`border-0 ${
-                      index === 0
-                        ? "bg-yellow-500/10 border-yellow-500/30 border"
-                        : "bg-card"
-                    }`}
-                  >
-                    <CardContent className="p-4">
-                      <View className="flex-row items-center justify-between">
-                        <View className="flex-row items-center gap-3">
-                          {getRankIcon(index + 1)}
-                          <View>
-                            <Text className="font-semibold">{player.name}</Text>
-                            <Text className="text-sm text-muted-foreground">
-                              #{index + 1}
-                            </Text>
-                          </View>
-                        </View>
-                        <Text className="text-2xl font-bold text-foreground">
-                          {player.survivalScore}
-                        </Text>
-                      </View>
-                    </CardContent>
-                  </Card>
-                </Animated.View>
+                  user={player}
+                  index={index}
+                  leaderboardType={LeaderboardType.SURVIVAL}
+                />
               )) || (
               <Text className="text-center text-muted-foreground py-8">
                 Aucune donnée disponible

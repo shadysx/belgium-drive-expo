@@ -17,11 +17,8 @@ interface UseQuizLogicProps {
   quizType: QuizType;
 }
 
-export const useQuizLogic = ({
-  questions,
-  resetTimer,
-  quizType,
-}: UseQuizLogicProps) => {
+export const useQuizLogic = (props: UseQuizLogicProps) => {
+  const { questions, resetTimer, quizType } = props;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState<number | null>(
     null
@@ -99,6 +96,11 @@ export const useQuizLogic = ({
         (!isQuizOver && !isSurvivalQuiz) ||
         (isSurvivalQuiz && answerIsCorrect)
       ) {
+        // Handle the case where the player score is higher than the number of questions
+        if (currentQuestionIndex === questionsLength - 1) {
+          setCurrentQuestionIndex(0);
+        }
+
         nextQuestion();
         resetTimer();
       } else if (isQuizOver || (isSurvivalQuiz && !answerIsCorrect)) {

@@ -25,9 +25,10 @@ export default function QuizScreen() {
     isLoading,
   } = useGetQuiz(quizRequestParsed);
 
-  const { timeLeft, resetTimer } = useQuizTimer(initialTimeLeft, () =>
-    handleAnswer()
-  );
+  const { timeLeft, resetTimer } = useQuizTimer({
+    initialTime: initialTimeLeft,
+    onTimeUp: () => handleAnswer(),
+  });
 
   const {
     currentQuestionIndex,

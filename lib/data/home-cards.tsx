@@ -22,7 +22,7 @@ export const homeCards: HomeCard[] = [
   {
     icon: <Car size={24} color="white" />,
     text: "Simulation d'examen",
-    cn: "bg-primary",
+    cn: "bg-primary text-white",
     onPress: () =>
       router.push({
         pathname: "/quiz",
@@ -38,7 +38,7 @@ export const homeCards: HomeCard[] = [
   {
     icon: <Skull size={24} color="white" />,
     text: "Survie",
-    cn: "bg-destructive",
+    cn: "bg-destructive text-white",
     onPress: () =>
       router.push({
         pathname: "/quiz",

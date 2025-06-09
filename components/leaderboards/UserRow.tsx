@@ -1,67 +1,60 @@
 import { View } from "react-native";
-import { CardContent } from "../ui/card";
-import { Card } from "../ui/card";
-import Animated, { SlideInLeft } from "react-native-reanimated";
+import { Card, CardContent } from "../ui/card";
 import { cn } from "~/lib/utils";
 import { Text } from "../ui/text";
-import { getRankStyles } from "~/lib/utils/getRankStyles";
+import { User } from "lucide-react-native";
+import { LeaderboardType } from "~/enums/leaderboard-type.enum";
+import { getPodiumCardStyle, getRankIcon } from "~/lib/utils/leaderboard.utils";
 
 interface UserRowProps {
   user: any;
   index: number;
-  scoreType: "xp" | "survival";
+  leaderboardType: LeaderboardType;
 }
 
-export const UserRow = ({ user, index, scoreType }: UserRowProps) => {
-  const rank = index + 1;
-  const styles = getRankStyles(rank);
-  const score = scoreType === "xp" ? user.xp : user.survivalScore || 0;
-  const scoreLabel = scoreType === "xp" ? "XP" : "";
+export const UserRow = (props: UserRowProps) => {
+  const { user, index, leaderboardType } = props;
+
+  const score =
+    leaderboardType === LeaderboardType.XP ? user.xp : user.survivalScore;
+  const scoreLabel = leaderboardType === LeaderboardType.XP ? "XP" : "";
+  const isCurrentUser = user.isCurrentUser;
 
   return (
-    <Animated.View
-      key={user.id}
-      entering={SlideInLeft.delay(index * 100).duration(400)}
-      className="mb-2"
-    >
-      <Card className="bg-secondary">
-        <CardContent className={cn("p-3 flex-row items-center")}>
-          <View
-            className={`${styles?.numberBg} w-10 h-10 rounded-md items-center justify-center mr-3 border flex-row`}
-          >
-            <Text className={`font-bold text-white`}>{rank}</Text>
+    <Card className={cn("border-0 relative", getPodiumCardStyle(index))}>
+      <CardContent className="p-4">
+        <View className="flex-row items-center justify-between">
+          <View className="flex-row items-center gap-3">
+            {getRankIcon(index + 1)}
+            <View>
+              <Text className="font-semibold text-base text-foreground">
+                {user.name}
+              </Text>
+              <Text className="text-sm text-muted-foreground">
+                #{index + 1}
+              </Text>
+            </View>
           </View>
 
-          <View className="flex-1">
-            <Text className={`font-medium ${styles?.textColor}`}>
-              {user.name} {user.isCurrentUser && "(Vous)"}
+          <View className="items-end flex-row gap-1">
+            <Text className="text-2xl font-bold text-foreground">
+              {score || 0}
             </Text>
-            <Text className="text-muted-foreground text-xs">
-              Niveau {user.level}
-            </Text>
+            {scoreLabel && (
+              <Text className="text-sm text-muted-foreground">
+                {scoreLabel}
+              </Text>
+            )}
           </View>
+        </View>
 
-          <View
-            className={`flex-row items-center bg-slate-700 px-3 py-2 rounded-md border border-slate-600 `}
-          >
-            <Text
-              className={`font-bold ${
-                rank <= 3
-                  ? `${
-                      rank === 1
-                        ? "text-yellow-400"
-                        : rank === 2
-                        ? "text-blue-400"
-                        : "text-orange-400"
-                    }`
-                  : "text-white"
-              }`}
-            >
-              {score} {scoreLabel}
-            </Text>
+        {isCurrentUser && (
+          <View className="absolute -top-2 -right-2 bg-primary px-2 py-1 rounded-full flex-row items-center gap-1 shadow-lg">
+            <User size={12} color="white" />
+            <Text className="text-white text-xs font-bold">Vous</Text>
           </View>
-        </CardContent>
-      </Card>
-    </Animated.View>
+        )}
+      </CardContent>
+    </Card>
   );
 };

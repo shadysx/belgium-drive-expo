@@ -10,7 +10,7 @@ import { QuizType } from "~/enums/quiz-type.enum";
 export const useSubmitQuiz = (quizType: QuizType) => {
   const queryClient = useQueryClient();
   const mutationKey =
-    quizType === QuizType.SURVIVAL ? "survival-quiz-result" : "quiz-result";
+    quizType === QuizType.SURVIVAL ? "survival-quiz-results" : "quiz-results";
   return useMutation<QuizResultDto, Error, QuizSubmission>({
     mutationFn: async (quizSubmission: QuizSubmission) => {
       const cookies = authClient.getCookie();
