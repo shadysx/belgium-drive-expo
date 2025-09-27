@@ -86,7 +86,7 @@ const SignUp = () => {
                     value={value}
                     onChangeText={onChange}
                     className="bg-background"
-                    placeholder="Enter your name"
+                    placeholder="Entrez votre nom d'utilisateur"
                     autoComplete="username"
                     textContentType="username"
                   />
@@ -150,7 +150,7 @@ const SignUp = () => {
 
         <CardFooter className="flex-col gap-4">
           <LoadingButton
-            text="Sign Up"
+            text="Créer un compte"
             isLoading={isLoading}
             onPress={handleSubmit(onSubmit)}
           />
@@ -160,7 +160,7 @@ const SignUp = () => {
             className="text-sm text-muted-foreground text-center active:opacity-70"
             onPress={() => router.replace("/sign-in")}
           >
-            Already have an account? Sign in
+            Vous avez déjà un compte ?
           </Text>
         </CardFooter>
       </Card>

@@ -125,7 +125,7 @@ const SignIn = () => {
         <CardFooter className="flex-col gap-4">
           {signinError && <ErrorText errorMessage={signinError} />}
           <LoadingButton
-            text="Sign In"
+            text="Se connecter"
             isLoading={isLoading}
             onPress={handleSubmit(onSubmit)}
           />
@@ -134,7 +134,7 @@ const SignIn = () => {
             className="text-sm text-muted-foreground text-center active:opacity-70"
             onPress={() => router.replace("/sign-up")}
           >
-            Pas de compte ? Créer un compte
+            Créer un compte
           </Text>
         </CardFooter>
       </Card>

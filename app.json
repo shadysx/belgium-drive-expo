@@ -2,7 +2,7 @@
   "expo": {
     "name": "Belgium Drive",
     "slug": "belgium-drive",
-    "version": "0.1.1",
+    "version": "0.1.18.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "belgium-drive",
@@ -13,9 +13,11 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "buildNumber": "0.1.1",
+      "buildNumber": "0.1.18.0",
       "supportsTablet": true,
       "bundleIdentifier": "com.shadycode.belgiumdrive"
     },
@@ -24,7 +26,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shadycode.belgiumdrive"
+      "package": "com.shadycode.belgiumdrive",
+      "versionCode": 24,
+      "targetSdkVersion": 35
     },
     "web": {
       "bundler": "metro",
@@ -43,6 +47,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "d854884b-eca4-47c2-9bf2-c5225c45f4bd"
+      }
     }
   }
 }
