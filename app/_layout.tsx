@@ -98,13 +98,7 @@ export default function RootLayout() {
             <Stack>
               <Stack.Screen name="sign-in" options={{ headerShown: false }} />
               <Stack.Screen name="sign-up" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="index"
-                options={{
-                  title: "Belgium Drive",
-                  headerShown: false,
-                }}
-              />
+              <Stack.Screen name="index" options={{ headerShown: false }} />
               <Stack.Screen name="home" options={{ headerShown: false }} />
               <Stack.Screen name="quiz" options={{ headerShown: false }} />
               <Stack.Screen
@@ -150,6 +144,13 @@ export default function RootLayout() {
                 name="stats"
                 options={{
                   title: "Statistiques",
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="about"
+                options={{
+                  title: "À propos",
                   headerShown: false,
                 }}
               />

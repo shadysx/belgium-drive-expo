@@ -1,14 +1,22 @@
 import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent, CardFooter } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { router } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { ThemeToggle } from "~/components/ThemeToggle";
 
 export default function LandingScreen() {
   return (
-    <View className="flex-1 bg-gradient-to-b from-primary/20 to-primary/5">
+    <SafeAreaView
+      className="flex-1 bg-background"
+      edges={["top", "left", "right"]}
+    >
       <View className="flex-1 justify-between p-6">
+        <View className="absolute top-2 right-4">
+          <ThemeToggle />
+        </View>
         {/* Main Content */}
         <Animated.View
           entering={FadeInDown.delay(400)}
@@ -70,6 +78,6 @@ export default function LandingScreen() {
           </Text>
         </Animated.View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }

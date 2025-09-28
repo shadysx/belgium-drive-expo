@@ -7,6 +7,8 @@ import { AlertTriangle } from "lucide-react-native";
 import { Header } from "~/components/shared/Header";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { cn } from "~/lib/utils";
+import { router } from "expo-router";
+import { Info } from "~/lib/icons";
 
 export default function Settings() {
   const session = authClient.useSession();
@@ -85,6 +87,21 @@ export default function Settings() {
             <Text>Passer à Premium</Text>
           </Button>
         )}
+      </Card>
+
+      {/* Mentions légales / À propos */}
+      <Card className="p-4 mb-6">
+        <Text className="text-lg font-semibold mb-2">À propos</Text>
+        <Text className="text-sm text-muted-foreground mb-3">
+          Cette application n’est pas affiliée au gouvernement belge. Consultez
+          la page dédiée pour le disclaimer complet et les sources officielles.
+        </Text>
+        <Button onPress={() => router.push("/about")}>
+          <View className="flex-row items-center">
+            <Info className="text-primary-foreground mr-2" size={20} />
+            <Text className="text-primary-foreground">Voir “À propos”</Text>
+          </View>
+        </Button>
       </Card>
 
       {/* Section Danger */}

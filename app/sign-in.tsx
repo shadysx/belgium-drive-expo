@@ -1,4 +1,5 @@
-import { View } from "react-native";
+import { View, Linking } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Card,
   CardHeader,
@@ -11,6 +12,7 @@ import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
 import LoadingButton from "~/components/shared/LoadingButton";
+import { ThemeToggle } from "~/components/ThemeToggle";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -30,8 +32,8 @@ const SignIn = () => {
   } = useForm<SignInFormData>({
     resolver: yupResolver(signInFormSchema),
     defaultValues: {
-      email: __DEV__ ? "test@mail.com" : "",
-      password: __DEV__ ? "password" : "",
+      email: __DEV__ ? "admin@belgiumdrive.com" : "",
+      password: __DEV__ ? "Chebac1205" : "",
     },
     mode: "onSubmit",
   });
@@ -62,83 +64,102 @@ const SignIn = () => {
   };
 
   return (
-    <View className="flex-1 justify-center items-center p-6 bg-secondary/30">
-      <Card className="w-full max-w-sm p-6 rounded-2xl">
-        <CardHeader>
-          <Text className="text-2xl font-bold text-center">Bienvenue</Text>
-          <Text className="text-muted-foreground text-center">
-            Connectez-vous à votre compte
-          </Text>
-        </CardHeader>
+    <SafeAreaView
+      className="flex-1 bg-background"
+      edges={["top", "left", "right"]}
+    >
+      <View className="flex-1 justify-center items-center p-6">
+        <View className="absolute top-2 right-4">
+          <ThemeToggle />
+        </View>
+        <Card className="w-full max-w-sm p-6 rounded-2xl">
+          <CardHeader>
+            <Text className="text-2xl font-bold text-center">Bienvenue</Text>
+            <Text className="text-muted-foreground text-center">
+              Connectez-vous à votre compte
+            </Text>
+          </CardHeader>
 
-        <CardContent className="gap-4">
-          <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Email</Text>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Input
-                    value={value}
-                    onChangeText={onChange}
-                    className="bg-background"
-                    placeholder="Entrez votre email"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    textContentType="emailAddress"
-                  />
-                  {errors.email?.message && (
-                    <ErrorText errorMessage={errors.email.message} />
-                  )}
-                </>
-              )}
+          <CardContent className="gap-4">
+            <View className="gap-2">
+              <Text className="text-sm text-muted-foreground">Email</Text>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      className="bg-background"
+                      placeholder="Entrez votre email"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      textContentType="emailAddress"
+                    />
+                    {errors.email?.message && (
+                      <ErrorText errorMessage={errors.email.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+
+            <View className="gap-2">
+              <Text className="text-sm text-muted-foreground">
+                Mot de passe
+              </Text>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      className="bg-background"
+                      placeholder="Enter your password"
+                      secureTextEntry
+                      autoComplete="current-password"
+                      textContentType="password"
+                    />
+                    {errors.password?.message && (
+                      <ErrorText errorMessage={errors.password.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+          </CardContent>
+
+          <CardFooter className="flex-col gap-4">
+            {signinError && <ErrorText errorMessage={signinError} />}
+            <LoadingButton
+              text="Se connecter"
+              isLoading={isLoading}
+              onPress={handleSubmit(onSubmit)}
             />
-          </View>
 
-          <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Mot de passe</Text>
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Input
-                    value={value}
-                    onChangeText={onChange}
-                    className="bg-background"
-                    placeholder="Enter your password"
-                    secureTextEntry
-                    autoComplete="current-password"
-                    textContentType="password"
-                  />
-                  {errors.password?.message && (
-                    <ErrorText errorMessage={errors.password.message} />
-                  )}
-                </>
-              )}
-            />
-          </View>
-        </CardContent>
+            <Text
+              className="text-sm text-primary text-center active:opacity-70"
+              onPress={() =>
+                Linking.openURL("https://belgiumdrive.com/reset-password")
+              }
+            >
+              Mot de passe oublié ?
+            </Text>
 
-        <CardFooter className="flex-col gap-4">
-          {signinError && <ErrorText errorMessage={signinError} />}
-          <LoadingButton
-            text="Se connecter"
-            isLoading={isLoading}
-            onPress={handleSubmit(onSubmit)}
-          />
-
-          <Text
-            className="text-sm text-muted-foreground text-center active:opacity-70"
-            onPress={() => router.replace("/sign-up")}
-          >
-            Créer un compte
-          </Text>
-        </CardFooter>
-      </Card>
-    </View>
+            <Text
+              className="text-sm text-muted-foreground text-center active:opacity-70"
+              onPress={() => router.replace("/sign-up")}
+            >
+              Créer un compte
+            </Text>
+          </CardFooter>
+        </Card>
+      </View>
+    </SafeAreaView>
   );
 };
 

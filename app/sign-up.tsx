@@ -1,4 +1,5 @@
-import { View } from "react-native";
+import { View, Linking } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Card,
   CardHeader,
@@ -12,6 +13,7 @@ import { authClient } from "../lib/auth-client";
 import { useState } from "react";
 import { router } from "expo-router";
 import LoadingButton from "~/components/shared/LoadingButton";
+import { ThemeToggle } from "~/components/ThemeToggle";
 import { Controller, useForm } from "react-hook-form";
 import { SignUpFormData, signUpFormSchema } from "~/lib/forms/sign-up.form";
 import ErrorText from "~/components/shared/ErrorText";
@@ -28,9 +30,9 @@ const SignUp = () => {
   } = useForm<SignUpFormData>({
     resolver: yupResolver(signUpFormSchema),
     defaultValues: {
-      email: __DEV__ ? "test@mail.com" : "",
-      password: __DEV__ ? "password" : "",
-      name: __DEV__ ? "LaurentK" : "",
+      email: __DEV__ ? "admin@belgiumdrive.com" : "",
+      password: __DEV__ ? "Chebac1205" : "",
+      name: __DEV__ ? "Belgium Drive Admin" : "",
     },
   });
 
@@ -61,110 +63,129 @@ const SignUp = () => {
   };
 
   return (
-    <View className="flex-1 justify-center items-center p-6 bg-secondary/30">
-      <Card className="w-full max-w-sm p-6 rounded-2xl">
-        <CardHeader>
-          <Text className="text-2xl font-bold text-center">
-            Créer un compte
-          </Text>
-          <Text className="text-muted-foreground text-center">
-            Créez un compte pour commencer
-          </Text>
-        </CardHeader>
-
-        <CardContent className="gap-4">
-          <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">
-              Nom d'utilisateur
+    <SafeAreaView
+      className="flex-1 bg-background"
+      edges={["top", "left", "right"]}
+    >
+      <View className="flex-1 justify-center items-center p-6">
+        <View className="absolute top-2 right-4">
+          <ThemeToggle />
+        </View>
+        <Card className="w-full max-w-sm p-6 rounded-2xl">
+          <CardHeader>
+            <Text className="text-2xl font-bold text-center">
+              Créer un compte
             </Text>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Input
-                    value={value}
-                    onChangeText={onChange}
-                    className="bg-background"
-                    placeholder="Entrez votre nom d'utilisateur"
-                    autoComplete="username"
-                    textContentType="username"
-                  />
-                  {errors.name?.message && (
-                    <ErrorText errorMessage={errors.name.message} />
-                  )}
-                </>
-              )}
+            <Text className="text-muted-foreground text-center">
+              Créez un compte pour commencer
+            </Text>
+          </CardHeader>
+
+          <CardContent className="gap-4">
+            <View className="gap-2">
+              <Text className="text-sm text-muted-foreground">
+                Nom d'utilisateur
+              </Text>
+              <Controller
+                name="name"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      className="bg-background"
+                      placeholder="Entrez votre nom d'utilisateur"
+                      autoComplete="username"
+                      textContentType="username"
+                    />
+                    {errors.name?.message && (
+                      <ErrorText errorMessage={errors.name.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+
+            <View className="gap-2">
+              <Text className="text-sm text-muted-foreground">Email</Text>
+              <Controller
+                name="email"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      className="bg-background"
+                      placeholder="Entrez votre email"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      textContentType="emailAddress"
+                    />
+                    {errors.email?.message && (
+                      <ErrorText errorMessage={errors.email.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+
+            <View className="gap-2">
+              <Text className="text-sm text-muted-foreground">
+                Mot de passe
+              </Text>
+              <Controller
+                name="password"
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      className="bg-background"
+                      placeholder="Choisissez un mot de passe"
+                      secureTextEntry
+                      autoComplete="new-password"
+                      textContentType="newPassword"
+                    />
+                    {errors.password?.message && (
+                      <ErrorText errorMessage={errors.password.message} />
+                    )}
+                  </>
+                )}
+              />
+            </View>
+          </CardContent>
+
+          <CardFooter className="flex-col gap-4">
+            <LoadingButton
+              text="Créer un compte"
+              isLoading={isLoading}
+              onPress={handleSubmit(onSubmit)}
             />
-          </View>
+            {signupError && <ErrorText errorMessage={signupError} />}
 
-          <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Email</Text>
-            <Controller
-              name="email"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Input
-                    value={value}
-                    onChangeText={onChange}
-                    className="bg-background"
-                    placeholder="Entrez votre email"
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoComplete="email"
-                    textContentType="emailAddress"
-                  />
-                  {errors.email?.message && (
-                    <ErrorText errorMessage={errors.email.message} />
-                  )}
-                </>
-              )}
-            />
-          </View>
+            <Text
+              className="text-sm text-primary text-center active:opacity-70"
+              onPress={() =>
+                Linking.openURL("https://belgiumdrive.com/reset-password")
+              }
+            >
+              Mot de passe oublié ?
+            </Text>
 
-          <View className="gap-2">
-            <Text className="text-sm text-muted-foreground">Mot de passe</Text>
-            <Controller
-              name="password"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <>
-                  <Input
-                    value={value}
-                    onChangeText={onChange}
-                    className="bg-background"
-                    placeholder="Choisissez un mot de passe"
-                    secureTextEntry
-                    autoComplete="new-password"
-                    textContentType="newPassword"
-                  />
-                  {errors.password?.message && (
-                    <ErrorText errorMessage={errors.password.message} />
-                  )}
-                </>
-              )}
-            />
-          </View>
-        </CardContent>
-
-        <CardFooter className="flex-col gap-4">
-          <LoadingButton
-            text="Créer un compte"
-            isLoading={isLoading}
-            onPress={handleSubmit(onSubmit)}
-          />
-          {signupError && <ErrorText errorMessage={signupError} />}
-
-          <Text
-            className="text-sm text-muted-foreground text-center active:opacity-70"
-            onPress={() => router.replace("/sign-in")}
-          >
-            Vous avez déjà un compte ?
-          </Text>
-        </CardFooter>
-      </Card>
-    </View>
+            <Text
+              className="text-sm text-muted-foreground text-center active:opacity-70"
+              onPress={() => router.replace("/sign-in")}
+            >
+              Vous avez déjà un compte ?
+            </Text>
+          </CardFooter>
+        </Card>
+      </View>
+    </SafeAreaView>
   );
 };
 

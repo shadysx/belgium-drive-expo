@@ -10,20 +10,11 @@ import { cn } from "~/lib/utils";
 import { Text } from "~/components/ui/text";
 import { authClient } from "~/lib/auth-client";
 import { useRouter } from "expo-router";
-import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
-import { useColorScheme } from "~/lib/useColorScheme";
-import { Settings2, MoonStar, LogOut, Sun, Menu, History } from "~/lib/icons";
+import { Settings2, LogOut, Menu, History, Info } from "~/lib/icons";
 
 export function HeaderMenu() {
   const { signOut } = authClient;
   const router = useRouter();
-  const { isDarkColorScheme, setColorScheme } = useColorScheme();
-
-  function toggleColorScheme() {
-    const newTheme = isDarkColorScheme ? "light" : "dark";
-    setColorScheme(newTheme);
-    setAndroidNavigationBar(newTheme);
-  }
 
   return (
     <DropdownMenu>
@@ -55,24 +46,7 @@ export function HeaderMenu() {
             />
             <Text className=" text-foreground mr-2">Historique</Text>
           </DropdownMenuItem>
-          <DropdownMenuItem onPress={toggleColorScheme}>
-            {isDarkColorScheme ? (
-              <MoonStar
-                className="text-foreground mr-2"
-                size={23}
-                strokeWidth={1.25}
-              />
-            ) : (
-              <Sun
-                className="text-foreground mr-2"
-                size={24}
-                strokeWidth={1.25}
-              />
-            )}
-            <Text className="text-foreground">
-              {isDarkColorScheme ? "Thème clair" : "Theme sombre"}
-            </Text>
-          </DropdownMenuItem>
+
           <DropdownMenuItem onPress={() => router.push("/settings")}>
             <Settings2
               className="text-foreground mr-2"
@@ -80,6 +54,14 @@ export function HeaderMenu() {
               strokeWidth={1.25}
             />
             <Text className=" text-foreground mr-2">Paramètres</Text>
+          </DropdownMenuItem>
+          <DropdownMenuItem onPress={() => router.push("/about")}>
+            <Info
+              className="text-foreground mr-2"
+              size={24}
+              strokeWidth={1.25}
+            />
+            <Text className=" text-foreground mr-2">À propos</Text>
           </DropdownMenuItem>
           <DropdownMenuItem onPress={() => signOut()}>
             <LogOut

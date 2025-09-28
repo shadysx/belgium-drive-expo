@@ -15,3 +15,4 @@ export * from "./CheckCircle2";
 export * from "./XCircle";
 export * from "./Clock";
 export * from "./ArrowRight";
+export * from "./Info";

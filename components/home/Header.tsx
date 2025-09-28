@@ -5,6 +5,7 @@ import { Card } from "~/components/ui/card";
 import { authClient } from "~/lib/auth-client";
 import { HeaderMenu } from "./HeaderMenu";
 import { useGetUserInfo } from "~/hooks/useQuery/useUserInfo";
+import { ThemeToggle } from "../ThemeToggle";
 
 export function Header() {
   const session = authClient.useSession();
@@ -40,7 +41,8 @@ export function Header() {
               </Text>
             </View>
           </View>
-          <View className="flex-row items-center gap-2">
+          <View className="absolute top-2 right-4 flex-row items-center gap-2">
+            <ThemeToggle />
             <HeaderMenu />
           </View>
         </View>
