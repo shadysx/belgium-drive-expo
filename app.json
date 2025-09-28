@@ -2,7 +2,7 @@
   "expo": {
     "name": "Belgium Drive",
     "slug": "belgium-drive",
-    "version": "0.1.18.0",
+    "version": "0.1.18.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "belgium-drive",
@@ -13,11 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "buildNumber": "0.1.18.0",
+      "buildNumber": "0.1.18.1",
       "supportsTablet": true,
       "bundleIdentifier": "com.shadycode.belgiumdrive"
     },
