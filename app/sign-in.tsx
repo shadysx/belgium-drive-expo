@@ -1,4 +1,4 @@
-import { View, Linking } from "react-native";
+import { View, Linking, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Card,
@@ -69,7 +69,11 @@ const SignIn = () => {
       edges={["top", "left", "right"]}
     >
       <View className="flex-1 justify-center items-center p-6">
-        <View className="absolute top-2 right-4">
+        <View
+          className={`absolute ${
+            Platform.OS === "android" ? "top-6" : "top-2"
+          } right-6`}
+        >
           <ThemeToggle />
         </View>
         <Card className="w-full max-w-sm p-6 rounded-2xl">

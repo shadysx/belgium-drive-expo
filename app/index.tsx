@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card, CardContent, CardFooter } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
@@ -14,7 +14,11 @@ export default function LandingScreen() {
       edges={["top", "left", "right"]}
     >
       <View className="flex-1 justify-between p-6">
-        <View className="absolute top-2 right-4">
+        <View
+          className={`absolute ${
+            Platform.OS === "android" ? "top-6" : "top-2"
+          } right-6`}
+        >
           <ThemeToggle />
         </View>
         {/* Main Content */}
